@@ -6,7 +6,7 @@
   <title>Budget — Expense Tracker</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f0f2f5; min-height: 100vh; padding-bottom: 60px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f0f2f5; min-height: 100vh; padding-bottom: 80px; }
 
     nav { background: #1a1a2e; display: flex; align-items: center; padding: 0 24px; height: 52px; gap: 4px; }
     .nav-brand { font-weight: 700; color: #fff; font-size: 1rem; margin-right: 24px; letter-spacing: -0.3px; }
@@ -18,26 +18,14 @@
 
     /* ── Month selector ─────────────────────────────────────────── */
     .month-row { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-    .month-chip {
-      padding: 7px 16px; border-radius: 20px; border: 1.5px solid #e4e4e4;
-      background: #fff; color: #666; font-size: 0.85rem; font-weight: 600;
-      cursor: pointer; transition: all 0.14s; white-space: nowrap;
-    }
+    .month-chip { padding: 7px 16px; border-radius: 20px; border: 1.5px solid #e4e4e4; background: #fff; color: #666; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.14s; white-space: nowrap; }
     .month-chip:hover { border-color: #5b6af5; color: #5b6af5; background: #f0f1ff; }
     .month-chip.active { border-color: #5b6af5; background: #5b6af5; color: #fff; }
-    input.month-input {
-      border: 1.5px solid #e4e4e4; border-radius: 8px; padding: 7px 11px;
-      font-size: 0.85rem; outline: none; background: #fff; color: #1a1a2e;
-      transition: border-color 0.15s; cursor: pointer;
-    }
+    input.month-input { border: 1.5px solid #e4e4e4; border-radius: 8px; padding: 7px 11px; font-size: 0.85rem; outline: none; background: #fff; color: #1a1a2e; transition: border-color 0.15s; cursor: pointer; }
     input.month-input:focus { border-color: #5b6af5; }
 
     /* ── Summary card ───────────────────────────────────────────── */
-    .summary-card {
-      background: #1a1a2e; color: #fff;
-      border-radius: 14px; padding: 20px 24px 18px;
-      margin-bottom: 16px;
-    }
+    .summary-card { background: #1a1a2e; color: #fff; border-radius: 14px; padding: 20px 24px 18px; margin-bottom: 16px; }
     .summary-month { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.5; margin-bottom: 4px; }
     .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; margin-top: 2px; }
     .summary-item { padding: 0 16px 0 0; }
@@ -46,20 +34,18 @@
     .summary-val { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 2px; }
     .summary-val.over { color: #ff6b6b; }
     .summary-lbl { font-size: 0.7rem; opacity: 0.5; }
-
     .bar-track { background: rgba(255,255,255,0.12); border-radius: 99px; height: 5px; overflow: hidden; margin-top: 16px; }
     .bar-fill { height: 100%; border-radius: 99px; background: #6ee7b7; transition: width 0.4s ease; }
     .bar-fill.warn { background: #fbbf24; }
     .bar-fill.over { background: #ff6b6b; }
 
-    /* ── Card ───────────────────────────────────────────────────── */
+    /* ── Cards ──────────────────────────────────────────────────── */
     .card { background: #fff; border-radius: 14px; padding: 18px 20px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
     .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .card-title { font-size: 0.88rem; font-weight: 600; color: #555; }
 
     .field-label { display: block; font-size: 0.7rem; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 5px; }
-    .amount-row { display: flex; gap: 8px; align-items: flex-end; }
-    .amount-row input { flex: 1; }
+
     input[type="number"], input[type="text"] {
       width: 100%; border: 1.5px solid #e4e4e4; border-radius: 8px;
       padding: 9px 12px; font-size: 0.95rem; outline: none;
@@ -67,8 +53,12 @@
     }
     input:focus { border-color: #5b6af5; background: #fff; }
 
-    .btn-save { padding: 9px 18px; background: #5b6af5; color: #fff; border: none; border-radius: 8px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+    .amount-row { display: flex; gap: 8px; align-items: flex-end; }
+    .amount-row input { flex: 1; }
+
+    .btn-save { padding: 9px 18px; background: #5b6af5; color: #fff; border: none; border-radius: 8px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: background 0.15s; white-space: nowrap; flex-shrink: 0; }
     .btn-save:hover { background: #4a57e0; }
+    .btn-save:active { transform: scale(0.98); }
 
     .btn-danger { padding: 6px 12px; background: none; color: #e53935; border: 1.5px solid #e53935; border-radius: 7px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: background 0.15s; }
     .btn-danger:hover { background: #fdecea; }
@@ -76,21 +66,30 @@
     .success-msg { color: #059669; font-size: 0.8rem; margin-top: 6px; min-height: 14px; }
     .error-msg   { color: #e53935;  font-size: 0.8rem; margin-top: 6px; min-height: 14px; }
 
-    /* ── Category allocations ───────────────────────────────────── */
-    .cat-list { list-style: none; }
-    .cat-row {
-      display: flex; align-items: flex-start; gap: 10px;
-      padding: 12px 0; border-bottom: 1px solid #f4f4f4;
-    }
-    .cat-row:last-child { border-bottom: none; }
-    .cat-row-info { flex: 1; min-width: 0; padding-top: 2px; }
-    .cat-row-name {
-      font-size: 0.88rem; font-weight: 500; color: #1a1a2e;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-      line-height: 1.6;
-    }
+    /* ── Category selector dropdown ─────────────────────────────── */
+    .select-wrap { position: relative; margin-bottom: 12px; }
+    .dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1.5px solid #e4e4e4; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.1); max-height: 200px; overflow-y: auto; z-index: 300; display: none; }
+    .dropdown.open { display: block; }
+    .dropdown-item { padding: 9px 13px; font-size: 0.88rem; cursor: pointer; color: #1a1a2e; transition: background 0.1s; display: flex; align-items: center; justify-content: space-between; }
+    .dropdown-item:hover { background: #f0f1ff; }
+    .dropdown-item .allocated-badge { font-size: 0.7rem; font-weight: 700; color: #5b6af5; background: #eef0ff; padding: 1px 7px; border-radius: 10px; }
+    .dropdown-empty { padding: 9px 13px; font-size: 0.85rem; color: #aaa; }
 
-    /* Progress bar */
+    /* ── Alloc form divider ─────────────────────────────────────── */
+    .alloc-divider { border: none; border-top: 1px solid #f0f0f0; margin: 18px 0 16px; }
+
+    /* ── Allocated category rows ────────────────────────────────── */
+    .alloc-section-title { font-size: 0.7rem; font-weight: 700; color: #bbb; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 10px; }
+
+    .cat-list { list-style: none; }
+    .cat-row { display: flex; align-items: flex-start; gap: 10px; padding: 11px 0; border-bottom: 1px solid #f4f4f4; animation: slideIn 0.16s ease; }
+    .cat-row:last-child { border-bottom: none; }
+    @keyframes slideIn { from { opacity:0; transform: translateY(-4px); } to { opacity:1; transform: translateY(0); } }
+
+    .cat-row-info { flex: 1; min-width: 0; }
+    .cat-row-name { font-size: 0.88rem; font-weight: 600; color: #1a1a2e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.5; }
+    .cat-row-amount { font-size: 0.82rem; font-weight: 600; color: #5b6af5; margin-top: 1px; }
+
     .cat-progress { margin-top: 6px; }
     .cat-bar-track { background: #f0f0f0; border-radius: 99px; height: 4px; overflow: hidden; }
     .cat-bar-fill  { height: 100%; border-radius: 99px; background: #5b6af5; transition: width 0.3s ease; }
@@ -99,37 +98,17 @@
     .cat-bar-labels { display: flex; justify-content: space-between; margin-top: 3px; }
     .cat-bar-spent { font-size: 0.7rem; color: #aaa; }
     .cat-bar-budgeted { font-size: 0.7rem; color: #aaa; }
-    .cat-spent-note { font-size: 0.72rem; color: #bbb; margin-top: 4px; }
 
-    .cat-amount-input {
-      width: 90px; border: 1.5px solid #e4e4e4; border-radius: 7px;
-      padding: 5px 8px; font-size: 0.85rem; outline: none;
-      background: #fafafa; color: #1a1a2e; text-align: right;
-      transition: border-color 0.15s; flex-shrink: 0;
-    }
-    .cat-amount-input:focus { border-color: #5b6af5; background: #fff; }
-    .cat-amount-input.allocated { border-color: #5b6af5; background: #eef0ff; color: #3a49c5; font-weight: 600; }
+    .cat-del-btn { background: none; border: none; cursor: pointer; color: #ccc; font-size: 0.85rem; padding: 4px 6px; border-radius: 6px; transition: color 0.15s, background 0.15s; flex-shrink: 0; margin-top: 2px; }
+    .cat-del-btn:hover { color: #e53935; background: #fdecea; }
 
-    .cat-save-btn {
-      padding: 5px 12px; background: #5b6af5; color: #fff;
-      border: none; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
-      cursor: pointer; transition: background 0.15s; white-space: nowrap; flex-shrink: 0;
-    }
-    .cat-save-btn:hover { background: #4a57e0; }
-    .cat-clear-btn {
-      padding: 5px 8px; background: none; color: #ccc;
-      border: 1.5px solid #e8e8e8; border-radius: 6px; font-size: 0.78rem;
-      cursor: pointer; transition: color 0.15s, border-color 0.15s; flex-shrink: 0;
-    }
-    .cat-clear-btn:hover { color: #e53935; border-color: #e53935; }
-
-    .allocated-total { display: flex; justify-content: space-between; padding: 10px 0 0; font-size: 0.82rem; color: #888; }
+    /* ── Allocated footer ───────────────────────────────────────── */
+    .allocated-total { display: flex; justify-content: space-between; align-items: center; padding: 10px 0 0; font-size: 0.82rem; color: #888; }
     .allocated-total strong { color: #333; }
-    .unallocated { font-size: 0.78rem; padding: 6px 10px; border-radius: 6px; background: #f0fdf4; color: #059669; font-weight: 600; display: inline-block; }
+    .unallocated { font-size: 0.78rem; padding: 5px 10px; border-radius: 6px; background: #f0fdf4; color: #059669; font-weight: 600; }
     .unallocated.over { background: #fef2f2; color: #e53935; }
 
-    .empty-state { padding: 24px 0; text-align: center; color: #bbb; font-size: 0.86rem; }
-
+    .empty-alloc { padding: 18px 0 4px; text-align: center; color: #ccc; font-size: 0.85rem; }
     .no-budget-hint { text-align: center; color: #bbb; font-size: 0.85rem; padding: 20px 0 10px; }
   </style>
 </head>
@@ -192,8 +171,31 @@
     <div class="card-header">
       <span class="card-title">Category Breakdown</span>
     </div>
-    <ul class="cat-list" id="cat-list"></ul>
-    <div class="allocated-total" id="allocated-total"></div>
+
+    <!-- Add allocation form -->
+    <label class="field-label">Category</label>
+    <div class="select-wrap">
+      <input type="text" id="alloc-cat-input" placeholder="Select a category…" autocomplete="off" readonly
+             onclick="openCatDropdown()" />
+      <div class="dropdown" id="alloc-cat-dropdown"></div>
+    </div>
+
+    <label class="field-label">Budget amount</label>
+    <div class="amount-row">
+      <input type="number" id="alloc-amount" placeholder="e.g. 500" min="0" step="0.01"
+             onkeydown="if(event.key==='Enter') addCatAllocation()" />
+      <button class="btn-save" onclick="addCatAllocation()">Set</button>
+    </div>
+    <div class="error-msg" id="alloc-error"></div>
+
+    <!-- Allocated list -->
+    <div id="alloc-list-wrap">
+      <hr class="alloc-divider" />
+      <div class="alloc-section-title">Allocated categories</div>
+      <ul class="cat-list" id="cat-list"></ul>
+      <div class="allocated-total" id="allocated-total"></div>
+    </div>
+
   </div>
 
 </div>
@@ -202,18 +204,19 @@
   const fmt = n => '$' + Number(n).toFixed(2);
   const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-  const NOW   = new Date();
+  const NOW    = new Date();
   const ymNow  = `${NOW.getFullYear()}-${String(NOW.getMonth()+1).padStart(2,'0')}`;
   const ymNext = (() => { const d = new Date(NOW.getFullYear(), NOW.getMonth()+1, 1); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; })();
 
-  let currentYM    = ymNow;
+  let currentYM     = ymNow;
   let allCategories = [];
   let currentBudget = null;
-  let monthSpent    = {};   // { total, by_category: [{category_id, spent}] }
+  let monthSpent    = {};
+  let selectedCatId = null;
 
-  // ── Month selection ───────────────────────────────────────────
   document.getElementById('month-pick').value = ymNow;
 
+  // ── Month selection ──────────────────────────────────────────────────────
   function selectChip(which) {
     document.getElementById('chip-this').classList.toggle('active', which==='this');
     document.getElementById('chip-next').classList.toggle('active', which==='next');
@@ -229,18 +232,17 @@
     document.getElementById('chip-next').classList.toggle('active', val===ymNext);
     load();
   }
-
   function fmtMonth(ym) {
     const [y,m] = ym.split('-');
     return new Date(+y,+m-1,1).toLocaleString('default',{month:'long',year:'numeric'});
   }
 
-  // ── Load ──────────────────────────────────────────────────────
+  // ── Load ─────────────────────────────────────────────────────────────────
   async function load() {
     const [cats, budget, spending] = await Promise.all([
-      fetch('/categories').then(r => r.json()),
-      fetch(`/budgets/${currentYM}`).then(r => r.json()).catch(() => null),
-      fetch(`/expenses/month/${currentYM}`).then(r => r.json()).catch(() => ({total:0, by_category:[]})),
+      fetch('/categories').then(r=>r.json()),
+      fetch(`/budgets/${currentYM}`).then(r=>r.json()).catch(()=>null),
+      fetch(`/expenses/month/${currentYM}`).then(r=>r.json()).catch(()=>({total:0,by_category:[]})),
     ]);
     allCategories = cats;
     currentBudget = budget;
@@ -249,12 +251,11 @@
   }
 
   function render() {
-    const ym     = currentYM;
-    const spent  = monthSpent?.total ?? 0;
-    const budget = currentBudget?.total_amount ?? 0;
+    const spent    = monthSpent?.total ?? 0;
+    const budget   = currentBudget?.total_amount ?? 0;
     const hasBudget = currentBudget && budget > 0;
 
-    document.getElementById('summary-month').textContent = fmtMonth(ym).toUpperCase();
+    document.getElementById('summary-month').textContent = fmtMonth(currentYM).toUpperCase();
     document.getElementById('s-spent').textContent = fmt(spent);
 
     if (hasBudget) {
@@ -264,7 +265,7 @@
       document.getElementById('s-remaining').textContent = fmt(Math.abs(rem));
       document.getElementById('s-remaining').className   = 'summary-val' + (rem<0?' over':'');
       document.getElementById('s-remaining-lbl').textContent = rem<0 ? 'Over budget' : 'Remaining';
-      const bar  = document.getElementById('summary-bar-fill');
+      const bar = document.getElementById('summary-bar-fill');
       bar.style.width = pct+'%';
       bar.className   = 'bar-fill' + (pct>=100?' over':pct>=80?' warn':'');
       document.getElementById('summary-bar-track').style.display = 'block';
@@ -277,81 +278,147 @@
       document.getElementById('s-remaining-lbl').textContent = 'Remaining';
       document.getElementById('summary-bar-track').style.display = 'none';
       document.getElementById('delete-budget-btn').style.display = 'none';
-      if (!document.getElementById('total-budget-input').value) document.getElementById('total-budget-input').value = '';
+      if (!document.getElementById('total-budget-input').value)
+        document.getElementById('total-budget-input').value = '';
     }
 
-    // Cat card
-    const catCard = document.getElementById('cat-card');
-    catCard.style.display = hasBudget ? 'block' : 'none';
+    document.getElementById('cat-card').style.display = hasBudget ? 'block' : 'none';
     if (hasBudget) renderCategories();
   }
 
-  function renderCategories() {
-    const list      = document.getElementById('cat-list');
-    const catBudgets = {}; // category_id → budgeted amount
+  // ── Category dropdown ────────────────────────────────────────────────────
+  function openCatDropdown() {
+    buildDropdown('');
+    document.getElementById('alloc-cat-dropdown').classList.add('open');
+  }
+
+  function buildDropdown(filter) {
+    const dd = document.getElementById('alloc-cat-dropdown');
+    const catBudgets = {};
     (currentBudget?.categories || []).forEach(bc => { catBudgets[bc.category_id] = bc.amount; });
-    const spentMap  = {};
+
+    const filtered = allCategories.filter(c =>
+      !filter || c.name.toLowerCase().includes(filter.toLowerCase())
+    );
+
+    if (!filtered.length) {
+      dd.innerHTML = '<div class="dropdown-empty">No categories found</div>';
+      return;
+    }
+
+    dd.innerHTML = filtered.map(c => {
+      const alloc = catBudgets[c.id];
+      const badge = alloc ? `<span class="allocated-badge">${fmt(alloc)}</span>` : '';
+      return `<div class="dropdown-item" onclick="selectCat(${c.id}, '${esc(c.name)}')">${esc(c.name)}${badge}</div>`;
+    }).join('');
+  }
+
+  function selectCat(id, name) {
+    selectedCatId = id;
+    document.getElementById('alloc-cat-input').value = name;
+    document.getElementById('alloc-cat-dropdown').classList.remove('open');
+    document.getElementById('alloc-error').textContent = '';
+    // Pre-fill amount if already allocated
+    const existing = (currentBudget?.categories || []).find(bc => bc.category_id === id);
+    if (existing) document.getElementById('alloc-amount').value = existing.amount;
+    else document.getElementById('alloc-amount').value = '';
+    document.getElementById('alloc-amount').focus();
+  }
+
+  // Close dropdown on outside click
+  document.addEventListener('click', e => {
+    const wrap = document.querySelector('.select-wrap');
+    if (wrap && !wrap.contains(e.target))
+      document.getElementById('alloc-cat-dropdown').classList.remove('open');
+  });
+
+  // ── Add / update allocation ──────────────────────────────────────────────
+  async function addCatAllocation() {
+    const errEl = document.getElementById('alloc-error');
+    errEl.textContent = '';
+
+    if (!selectedCatId) { errEl.textContent = 'Please select a category.'; return; }
+    const val = parseFloat(document.getElementById('alloc-amount').value);
+    if (isNaN(val) || val < 0) { errEl.textContent = 'Enter a valid amount.'; return; }
+
+    const res = await fetch(`/budgets/${currentYM}/categories/${selectedCatId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: val }),
+    });
+
+    if (res.ok) {
+      // Reset form
+      selectedCatId = null;
+      document.getElementById('alloc-cat-input').value = '';
+      document.getElementById('alloc-amount').value = '';
+      await load();
+    } else {
+      errEl.textContent = 'Failed to save. Try again.';
+    }
+  }
+
+  // ── Render allocated list ────────────────────────────────────────────────
+  function renderCategories() {
+    const catBudgets = {};
+    (currentBudget?.categories || []).forEach(bc => { catBudgets[bc.category_id] = { amount: bc.amount, id: bc.category_id }; });
+
+    const spentMap = {};
     (monthSpent?.by_category || []).forEach(s => { spentMap[s.category_id] = s.spent; });
 
-    const totalBudgeted  = Object.values(catBudgets).reduce((a,b)=>a+b, 0);
-    const totalAllocated = totalBudgeted;
-    const unallocated    = (currentBudget?.total_amount ?? 0) - totalAllocated;
+    const allocated = allCategories.filter(c => catBudgets[c.id]);
+    const totalAllocated = Object.values(catBudgets).reduce((a, b) => a + b.amount, 0);
+    const unallocated = (currentBudget?.total_amount ?? 0) - totalAllocated;
 
-    list.innerHTML = allCategories.map(cat => {
-      const budgeted = catBudgets[cat.id] ?? 0;
-      const spent    = spentMap[cat.id]   ?? 0;
-      const hasBudg  = budgeted > 0;
-      const pct      = hasBudg ? Math.min((spent/budgeted)*100, 100) : 0;
-      const barClass = pct>=100 ? ' over' : pct>=80 ? ' warn' : '';
-      const progressHtml = hasBudg ? `
-        <div class="cat-progress">
-          <div class="cat-bar-track"><div class="cat-bar-fill${barClass}" style="width:${pct}%"></div></div>
-          <div class="cat-bar-labels">
-            <span class="cat-bar-spent">${fmt(spent)} spent</span>
-            <span class="cat-bar-budgeted">of ${fmt(budgeted)}</span>
-          </div>
-        </div>` : (spent > 0 ? `<div class="cat-spent-note">${fmt(spent)} spent · no budget set</div>` : '');
+    const list = document.getElementById('cat-list');
+
+    if (!allocated.length) {
+      list.innerHTML = '<div class="empty-alloc">No categories allocated yet.<br>Pick a category above to get started.</div>';
+      document.getElementById('allocated-total').innerHTML = '';
+      return;
+    }
+
+    list.innerHTML = allocated.map(cat => {
+      const budgeted = catBudgets[cat.id].amount;
+      const spent    = spentMap[cat.id] ?? 0;
+      const pct      = Math.min((spent / budgeted) * 100, 100);
+      const barClass = pct >= 100 ? ' over' : pct >= 80 ? ' warn' : '';
 
       return `
         <li class="cat-row">
           <div class="cat-row-info">
             <div class="cat-row-name">${esc(cat.name)}</div>
-            ${progressHtml}
+            <div class="cat-progress">
+              <div class="cat-bar-track"><div class="cat-bar-fill${barClass}" style="width:${pct}%"></div></div>
+              <div class="cat-bar-labels">
+                <span class="cat-bar-spent">${fmt(spent)} spent</span>
+                <span class="cat-bar-budgeted">of ${fmt(budgeted)}</span>
+              </div>
+            </div>
           </div>
-          <input type="number" class="cat-amount-input ${hasBudg?'allocated':''}"
-            id="cat-inp-${cat.id}"
-            value="${hasBudg ? budgeted : ''}"
-            placeholder="—"
-            min="0" step="0.01"
-            oninput="onCatInput(${cat.id})"
-          />
-          <button class="cat-save-btn" onclick="saveCatBudget(${cat.id})">Set</button>
-          ${hasBudg ? `<button class="cat-clear-btn" onclick="clearCatBudget(${cat.id})" title="Remove">✕</button>` : ''}
+          <button class="cat-del-btn" onclick="clearCatBudget(${cat.id})" title="Remove allocation">✕</button>
         </li>`;
     }).join('');
 
-    const unallocEl = document.getElementById('allocated-total');
-    if (totalAllocated > 0) {
-      unallocEl.innerHTML = `
-        <span>Allocated: <strong>${fmt(totalAllocated)}</strong> of ${fmt(currentBudget.total_amount)}</span>
-        <span class="unallocated ${unallocated<0?'over':''}">${unallocated>=0?'Unallocated: '+fmt(unallocated):'Over-allocated: '+fmt(Math.abs(unallocated))}</span>`;
-    } else {
-      unallocEl.innerHTML = '';
-    }
+    document.getElementById('allocated-total').innerHTML = `
+      <span>Allocated: <strong>${fmt(totalAllocated)}</strong> of ${fmt(currentBudget.total_amount)}</span>
+      <span class="unallocated ${unallocated<0?'over':''}">${
+        unallocated >= 0
+          ? 'Unallocated: ' + fmt(unallocated)
+          : 'Over-allocated: ' + fmt(Math.abs(unallocated))
+      }</span>`;
   }
 
-  function onCatInput(catId) {
-    const inp = document.getElementById('cat-inp-'+catId);
-    inp.classList.toggle('allocated', !!inp.value && parseFloat(inp.value) > 0);
-  }
-
-  // ── Save / delete budget ──────────────────────────────────────
+  // ── Total budget ─────────────────────────────────────────────────────────
   async function saveTotalBudget() {
     const val = parseFloat(document.getElementById('total-budget-input').value);
     const msg = document.getElementById('budget-msg');
     msg.textContent = '';
     if (isNaN(val) || val < 0) { msg.style.color='#e53935'; msg.textContent='Enter a valid amount.'; return; }
-    const res = await fetch(`/budgets/${currentYM}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({total_amount:val}) });
+    const res = await fetch(`/budgets/${currentYM}`, {
+      method: 'PUT', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ total_amount: val }),
+    });
     if (res.ok) {
       msg.style.color='#059669'; msg.textContent='Budget saved!';
       setTimeout(()=>msg.textContent='', 2500);
@@ -361,26 +428,22 @@
 
   async function deleteBudget() {
     if (!confirm('Remove the budget for this month? Category allocations will also be deleted.')) return;
-    await fetch(`/budgets/${currentYM}`, {method:'DELETE'});
+    await fetch(`/budgets/${currentYM}`, { method: 'DELETE' });
     document.getElementById('total-budget-input').value = '';
     await load();
   }
 
-  // ── Save / clear category budgets ─────────────────────────────
-  async function saveCatBudget(catId) {
-    const inp = document.getElementById('cat-inp-'+catId);
-    const val = parseFloat(inp.value);
-    if (isNaN(val) || val < 0) { inp.focus(); return; }
-    await fetch(`/budgets/${currentYM}/categories/${catId}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({amount:val}) });
-    await load();
-  }
-
   async function clearCatBudget(catId) {
-    await fetch(`/budgets/${currentYM}/categories/${catId}`, {method:'DELETE'});
+    await fetch(`/budgets/${currentYM}/categories/${catId}`, { method: 'DELETE' });
     await load();
   }
 
-  // ── Init ──────────────────────────────────────────────────────
+  // ── Keyboard shortcut for total budget input ─────────────────────────────
+  document.getElementById('total-budget-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') saveTotalBudget();
+  });
+
+  // ── Init ─────────────────────────────────────────────────────────────────
   load();
 </script>
 <script src="/chat.js"></script>
