@@ -443,5 +443,13 @@
   loadCategories();
   loadAll();
 </script>
+<script src="/chat.js"></script>
+<!-- Refresh expense list when chatbot adds expenses -->
+<script>
+  window.addEventListener('chatDataChanged', (e) => {
+    const { tool } = e.detail;
+    if (tool === 'add_expenses') loadAll();
+  });
+</script>
 </body>
 </html>

@@ -2,9 +2,10 @@ import sqlite3
 import os
 from contextlib import contextmanager
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, StreamingResponse, FileResponse
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
+from chat_handler import stream_chat
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "expenses.db")
 
@@ -271,3 +272,30 @@ def delete_budget_category(year_month: str, category_id: int):
             (budget["id"], category_id)
         )
         conn.commit()
+
+
+# ── Chat ──────────────────────────────────────────────────────────────────────
+
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+class ChatRequest(BaseModel):
+    messages: List[ChatMessage]
+
+@app.get("/chat.js")
+def serve_chat_js():
+    path = os.path.join(os.path.dirname(__file__), "chat.js")
+    return FileResponse(path, media_type="application/javascript")
+
+@app.post("/chat")
+def chat_endpoint(req: ChatRequest):
+    msgs = [{"role": m.role, "content": m.content} for m in req.messages]
+    return StreamingResponse(
+        stream_chat(msgs),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )

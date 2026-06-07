@@ -383,5 +383,12 @@
   // ── Init ──────────────────────────────────────────────────────
   load();
 </script>
+<script src="/chat.js"></script>
+<script>
+  window.addEventListener('chatDataChanged', (e) => {
+    const { tool } = e.detail;
+    if (['set_budget', 'set_category_budget', 'add_expenses'].includes(tool)) load();
+  });
+</script>
 </body>
 </html>
