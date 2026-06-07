@@ -14,7 +14,7 @@
       padding-bottom: 60px;
     }
 
-    /* Nav */
+    /* ── Nav ─────────────────────────────────────────────────── */
     nav {
       background: #1a1a2e;
       display: flex;
@@ -23,13 +23,7 @@
       height: 52px;
       gap: 4px;
     }
-    .nav-brand {
-      font-weight: 700;
-      color: #fff;
-      font-size: 1rem;
-      margin-right: 24px;
-      letter-spacing: -0.3px;
-    }
+    .nav-brand { font-weight: 700; color: #fff; font-size: 1rem; margin-right: 24px; letter-spacing: -0.3px; }
     nav a {
       color: rgba(255,255,255,0.55);
       text-decoration: none;
@@ -42,74 +36,52 @@
     nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
     nav a.active { color: #fff; background: rgba(255,255,255,0.12); }
 
-    .page {
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 32px 16px 0;
-    }
+    .page { max-width: 560px; margin: 0 auto; padding: 28px 16px 0; }
 
-    /* Total card */
+    /* ── Total card ──────────────────────────────────────────── */
     .total-card {
       background: #1a1a2e;
       color: #fff;
       border-radius: 14px;
-      padding: 22px 24px;
-      margin-bottom: 20px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
     }
-    .total-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      opacity: 0.55;
-    }
-    .total-amount {
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: -1px;
-      margin-top: 4px;
-    }
+    .total-left .total-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.55; }
+    .total-left .total-amount { font-size: 2rem; font-weight: 700; letter-spacing: -1px; margin-top: 2px; }
+    .total-right { text-align: right; font-size: 0.78rem; opacity: 0.55; line-height: 1.6; }
 
-    /* Card */
+    /* ── Card ────────────────────────────────────────────────── */
     .card {
       background: #fff;
       border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 20px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.07);
     }
-    .card h2 {
-      font-size: 0.92rem;
+    .card-title {
+      font-size: 0.85rem;
       font-weight: 600;
-      color: #555;
-      margin-bottom: 14px;
+      color: #666;
+      margin-bottom: 12px;
     }
 
-    /* Form grid */
+    /* ── Form ────────────────────────────────────────────────── */
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 110px;
-      gap: 10px;
+      gap: 8px;
     }
     .form-grid .full { grid-column: 1 / -1; }
-
-    label.field-label {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 5px;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    input[type="date"] {
+    .field-label { display: block; font-size: 0.7rem; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+    input[type="text"], input[type="number"], input[type="date"] {
       width: 100%;
       border: 1.5px solid #e4e4e4;
       border-radius: 8px;
-      padding: 9px 12px;
-      font-size: 0.93rem;
+      padding: 8px 11px;
+      font-size: 0.9rem;
       outline: none;
       background: #fafafa;
       color: #1a1a2e;
@@ -117,62 +89,113 @@
     }
     input:focus { border-color: #5b6af5; background: #fff; }
 
-    /* Custom searchable select */
+    /* Searchable select */
     .select-wrap { position: relative; }
-    .select-wrap input { cursor: pointer; }
     .dropdown {
       position: absolute;
-      top: calc(100% + 4px);
-      left: 0; right: 0;
+      top: calc(100% + 4px); left: 0; right: 0;
       background: #fff;
       border: 1.5px solid #e4e4e4;
       border-radius: 10px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      max-height: 200px;
+      max-height: 180px;
       overflow-y: auto;
-      z-index: 100;
+      z-index: 200;
       display: none;
     }
     .dropdown.open { display: block; }
-    .dropdown-item {
-      padding: 9px 14px;
-      font-size: 0.91rem;
-      cursor: pointer;
-      color: #1a1a2e;
-      transition: background 0.1s;
-    }
-    .dropdown-item:hover, .dropdown-item.highlighted { background: #f0f1ff; }
-    .dropdown-empty {
-      padding: 10px 14px;
-      font-size: 0.88rem;
-      color: #aaa;
-    }
+    .dropdown-item { padding: 8px 13px; font-size: 0.88rem; cursor: pointer; color: #1a1a2e; transition: background 0.1s; }
+    .dropdown-item:hover { background: #f0f1ff; }
+    .dropdown-empty { padding: 9px 13px; font-size: 0.85rem; color: #aaa; }
 
-    /* Buttons */
     .btn-primary {
-      width: 100%;
-      margin-top: 14px;
-      background: #5b6af5;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 11px 18px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
+      width: 100%; margin-top: 12px;
+      background: #5b6af5; color: #fff;
+      border: none; border-radius: 8px;
+      padding: 10px 18px; font-size: 0.92rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s, transform 0.1s;
     }
     .btn-primary:hover { background: #4a57e0; }
     .btn-primary:active { transform: scale(0.98); }
+    .error-msg { color: #e53935; font-size: 0.79rem; margin-top: 7px; min-height: 15px; }
 
-    .error-msg {
-      color: #e53935;
-      font-size: 0.81rem;
-      margin-top: 8px;
-      min-height: 16px;
+    /* ── Sort / Filter / Group controls ─────────────────────── */
+    .controls-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .controls-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .controls-row + .controls-row { margin-top: 10px; padding-top: 10px; border-top: 1px solid #f2f2f2; }
+
+    .ctrl-group { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 120px; }
+    .ctrl-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: #bbb; }
+
+    select.ctrl-select {
+      border: 1.5px solid #e4e4e4;
+      border-radius: 7px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      background: #fafafa;
+      color: #1a1a2e;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      width: 100%;
+    }
+    select.ctrl-select:focus { border-color: #5b6af5; background: #fff; }
+    select.ctrl-select.active { border-color: #5b6af5; background: #eef0ff; color: #5b6af5; font-weight: 600; }
+
+    input.ctrl-date {
+      border: 1.5px solid #e4e4e4;
+      border-radius: 7px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      background: #fafafa;
+      color: #1a1a2e;
+      outline: none;
+      transition: border-color 0.15s;
+      width: 100%;
+    }
+    input.ctrl-date:focus { border-color: #5b6af5; background: #fff; }
+    input.ctrl-date.active { border-color: #5b6af5; background: #eef0ff; }
+
+    .clear-btn {
+      border: 1.5px solid #e4e4e4;
+      border-radius: 7px;
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #999;
+      background: none;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      white-space: nowrap;
+      align-self: flex-end;
+    }
+    .clear-btn:hover { color: #e53935; border-color: #e53935; background: #fdecea; }
+    .clear-btn.has-filters { color: #5b6af5; border-color: #5b6af5; }
+
+    .active-badge {
+      display: inline-block;
+      background: #5b6af5;
+      color: #fff;
+      border-radius: 10px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: middle;
     }
 
-    /* Expense list */
+    /* ── Expense list ────────────────────────────────────────── */
     .list-card {
       background: #fff;
       border-radius: 14px;
@@ -180,77 +203,58 @@
       overflow: hidden;
     }
     .list-header {
-      padding: 15px 20px 12px;
-      font-size: 0.92rem;
+      padding: 13px 20px 11px;
+      font-size: 0.88rem;
       font-weight: 600;
-      color: #555;
+      color: #666;
       border-bottom: 1px solid #f2f2f2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
+    .list-count { font-size: 0.78rem; color: #bbb; font-weight: 500; }
+
     .expense-list { list-style: none; }
+
+    /* Group header */
+    .group-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 20px;
+      background: #f7f8fc;
+      border-bottom: 1px solid #ebebeb;
+      border-top: 1px solid #ebebeb;
+    }
+    .group-header:first-child { border-top: none; }
+    .group-name { font-size: 0.8rem; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+    .group-total { font-size: 0.8rem; font-weight: 700; color: #5b6af5; }
+
     .expense-item {
       display: flex;
       align-items: center;
-      padding: 13px 20px;
+      padding: 12px 20px;
       border-bottom: 1px solid #f4f4f4;
       gap: 10px;
-      animation: slideIn 0.18s ease;
+      transition: background 0.1s;
+      animation: slideIn 0.16s ease;
     }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-5px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
     .expense-item:last-child { border-bottom: none; }
     .expense-item:hover { background: #fafafa; }
 
     .expense-info { flex: 1; min-width: 0; }
-    .expense-name {
-      font-size: 0.93rem;
-      font-weight: 500;
-      color: #1a1a2e;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .expense-meta {
-      font-size: 0.77rem;
-      color: #aaa;
-      margin-top: 2px;
-      display: flex;
-      gap: 8px;
-    }
-    .expense-cat {
-      background: #eef0ff;
-      color: #5b6af5;
-      border-radius: 4px;
-      padding: 1px 6px;
-      font-size: 0.72rem;
-      font-weight: 600;
-    }
-    .expense-amount {
-      font-size: 0.93rem;
-      font-weight: 600;
-      color: #222;
-      flex-shrink: 0;
-    }
+    .expense-name { font-size: 0.9rem; font-weight: 500; color: #1a1a2e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .expense-meta { font-size: 0.74rem; color: #bbb; margin-top: 2px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+    .expense-cat { background: #eef0ff; color: #5b6af5; border-radius: 4px; padding: 1px 6px; font-size: 0.7rem; font-weight: 600; }
+    .expense-amount { font-size: 0.9rem; font-weight: 600; color: #222; flex-shrink: 0; }
     .del-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #ccc;
-      font-size: 1rem;
-      padding: 4px 6px;
-      border-radius: 6px;
-      transition: color 0.15s, background 0.15s;
-      flex-shrink: 0;
+      background: none; border: none; cursor: pointer;
+      color: #ccc; font-size: 0.95rem; padding: 4px 6px;
+      border-radius: 6px; transition: color 0.15s, background 0.15s; flex-shrink: 0;
     }
     .del-btn:hover { color: #e53935; background: #fdecea; }
-
-    .empty-state {
-      padding: 32px 20px;
-      text-align: center;
-      color: #bbb;
-      font-size: 0.88rem;
-    }
+    .empty-state { padding: 30px 20px; text-align: center; color: #bbb; font-size: 0.87rem; }
   </style>
 </head>
 <body>
@@ -263,30 +267,31 @@
 
 <div class="page">
 
+  <!-- Total -->
   <div class="total-card">
-    <div class="total-label">Total Spending</div>
-    <div class="total-amount" id="total">$0.00</div>
+    <div class="total-left">
+      <div class="total-label">Total Spending</div>
+      <div class="total-amount" id="total">$0.00</div>
+    </div>
+    <div class="total-right" id="total-sub"></div>
   </div>
 
+  <!-- Add Expense -->
   <div class="card">
-    <h2>Add Expense</h2>
+    <div class="card-title">Add Expense</div>
     <div class="form-grid">
-
       <div class="full">
         <label class="field-label">Description</label>
         <input type="text" id="name" placeholder="e.g. Lunch, Uber ride…" maxlength="100" />
       </div>
-
       <div>
         <label class="field-label">Amount</label>
         <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" />
       </div>
-
       <div>
         <label class="field-label">Date</label>
         <input type="date" id="date" />
       </div>
-
       <div class="full">
         <label class="field-label">Category</label>
         <div class="select-wrap" id="cat-wrap">
@@ -294,123 +299,268 @@
           <div class="dropdown" id="cat-dropdown"></div>
         </div>
       </div>
-
     </div>
     <div class="error-msg" id="error"></div>
     <button class="btn-primary" onclick="addExpense()">Add Expense</button>
   </div>
 
+  <!-- Sort / Filter / Group -->
+  <div class="controls-card" id="controls-card">
+    <div class="controls-row">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Sort by</span>
+        <select class="ctrl-select" id="sort-select" onchange="applyAndRender()">
+          <option value="date-desc">Date — Newest</option>
+          <option value="date-asc">Date — Oldest</option>
+          <option value="amount-desc">Amount — High to Low</option>
+          <option value="amount-asc">Amount — Low to High</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Group by</span>
+        <select class="ctrl-select" id="group-select" onchange="applyAndRender()">
+          <option value="none">No grouping</option>
+          <option value="month">Month</option>
+          <option value="category">Category</option>
+        </select>
+      </div>
+      <button class="clear-btn" id="clear-btn" onclick="clearAll()">Clear all</button>
+    </div>
+
+    <div class="controls-row">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Category</span>
+        <select class="ctrl-select" id="filter-cat" onchange="applyAndRender()">
+          <option value="">All categories</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Month</span>
+        <select class="ctrl-select" id="filter-month" onchange="applyAndRender()">
+          <option value="">All months</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">From</span>
+        <input type="date" class="ctrl-date" id="filter-from" oninput="applyAndRender()" />
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">To</span>
+        <input type="date" class="ctrl-date" id="filter-to" oninput="applyAndRender()" />
+      </div>
+    </div>
+  </div>
+
+  <!-- List -->
   <div class="list-card">
-    <div class="list-header">Expenses</div>
+    <div class="list-header">
+      <span>Expenses</span>
+      <span class="list-count" id="list-count"></span>
+    </div>
     <ul class="expense-list" id="list"></ul>
   </div>
 
 </div>
 
 <script>
-  const fmt = n => '$' + Number(n).toFixed(2);
-  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const fmt    = n => '$' + Number(n).toFixed(2);
+  const esc    = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const today  = () => new Date().toLocaleDateString('en-CA');
 
-  // Set default date to today
-  const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
-  document.getElementById('date').value = todayStr;
+  document.getElementById('date').value = today();
 
-  // ── Searchable category dropdown ─────────────────────────────────────────
+  // ── State ──────────────────────────────────────────────────────
+  let allExpenses  = [];
   let allCategories = [];
   let selectedCatId = null;
 
-  const catInput = document.getElementById('cat-input');
+  // ── Searchable category input ───────────────────────────────────
+  const catInput    = document.getElementById('cat-input');
   const catDropdown = document.getElementById('cat-dropdown');
 
   async function loadCategories() {
     allCategories = await fetch('/categories').then(r => r.json());
+    populateCategoryFilter();
     renderDropdown('');
   }
 
-  function renderDropdown(query) {
-    const q = query.toLowerCase();
+  function renderDropdown(q) {
     const filtered = q
-      ? allCategories.filter(c => c.name.toLowerCase().includes(q))
+      ? allCategories.filter(c => c.name.toLowerCase().includes(q.toLowerCase()))
       : allCategories;
-
-    if (!filtered.length) {
-      catDropdown.innerHTML = '<div class="dropdown-empty">No categories found</div>';
-    } else {
-      catDropdown.innerHTML = filtered.map(c =>
-        `<div class="dropdown-item" data-id="${c.id}" data-name="${esc(c.name)}">${esc(c.name)}</div>`
-      ).join('');
-      catDropdown.querySelectorAll('.dropdown-item').forEach(el => {
-        el.addEventListener('mousedown', e => {
-          e.preventDefault();
-          selectCategory(parseInt(el.dataset.id), el.dataset.name);
-        });
+    catDropdown.innerHTML = filtered.length
+      ? filtered.map(c => `<div class="dropdown-item" data-id="${c.id}" data-name="${esc(c.name)}">${esc(c.name)}</div>`).join('')
+      : `<div class="dropdown-empty">No categories found</div>`;
+    catDropdown.querySelectorAll('.dropdown-item').forEach(el => {
+      el.addEventListener('mousedown', e => {
+        e.preventDefault();
+        selectedCatId = parseInt(el.dataset.id);
+        catInput.value = el.dataset.name;
+        catDropdown.classList.remove('open');
       });
-    }
+    });
   }
 
-  function selectCategory(id, name) {
-    selectedCatId = id;
-    catInput.value = name;
-    catDropdown.classList.remove('open');
+  catInput.addEventListener('focus', () => { renderDropdown(catInput.value); catDropdown.classList.add('open'); });
+  catInput.addEventListener('input', () => { selectedCatId = null; renderDropdown(catInput.value); catDropdown.classList.add('open'); });
+  catInput.addEventListener('blur', () => setTimeout(() => catDropdown.classList.remove('open'), 150));
+  document.addEventListener('click', e => { if (!document.getElementById('cat-wrap').contains(e.target)) catDropdown.classList.remove('open'); });
+
+  // ── Filter dropdowns ────────────────────────────────────────────
+  function populateCategoryFilter() {
+    const sel = document.getElementById('filter-cat');
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">All categories</option>' +
+      allCategories.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+    sel.value = cur;
   }
 
-  catInput.addEventListener('focus', () => {
-    renderDropdown(catInput.value);
-    catDropdown.classList.add('open');
-  });
-  catInput.addEventListener('input', () => {
-    selectedCatId = null;
-    renderDropdown(catInput.value);
-    catDropdown.classList.add('open');
-  });
-  catInput.addEventListener('blur', () => {
-    setTimeout(() => catDropdown.classList.remove('open'), 150);
-  });
-
-  // Close dropdown when clicking outside
-  document.addEventListener('click', e => {
-    if (!document.getElementById('cat-wrap').contains(e.target)) {
-      catDropdown.classList.remove('open');
-    }
-  });
-
-  // ── Expenses ─────────────────────────────────────────────────────────────
-  async function loadAll() {
-    const [expenses, totalRes] = await Promise.all([
-      fetch('/expenses').then(r => r.json()),
-      fetch('/expenses/total').then(r => r.json())
-    ]);
-    renderList(expenses);
-    document.getElementById('total').textContent = fmt(totalRes.total);
+  function populateMonthFilter(expenses) {
+    const sel = document.getElementById('filter-month');
+    const cur = sel.value;
+    const months = [...new Set(
+      expenses.filter(e => e.date).map(e => e.date.slice(0,7))
+    )].sort().reverse();
+    sel.innerHTML = '<option value="">All months</option>' +
+      months.map(m => `<option value="${m}">${fmtMonth(m)}</option>`).join('');
+    sel.value = months.includes(cur) ? cur : '';
   }
 
-  function renderList(expenses) {
-    const list = document.getElementById('list');
-    if (!expenses.length) {
-      list.innerHTML = '<li class="empty-state">No expenses yet. Add one above.</li>';
-      return;
-    }
-    list.innerHTML = expenses.map(e => {
-      const datePart = e.date ? `<span>${formatDate(e.date)}</span>` : '';
-      const catPart  = e.category_name ? `<span class="expense-cat">${esc(e.category_name)}</span>` : '';
-      return `
-        <li class="expense-item" id="item-${e.id}">
-          <div class="expense-info">
-            <div class="expense-name">${esc(e.name)}</div>
-            <div class="expense-meta">${datePart}${catPart}</div>
-          </div>
-          <span class="expense-amount">${fmt(e.amount)}</span>
-          <button class="del-btn" onclick="deleteExpense(${e.id})" title="Delete">&#x2715;</button>
-        </li>`;
-    }).join('');
+  function fmtMonth(ym) {
+    if (!ym) return '';
+    const [y, m] = ym.split('-');
+    return new Date(+y, +m - 1, 1).toLocaleString('default', { month: 'long', year: 'numeric' });
   }
 
-  function formatDate(str) {
+  function fmtDate(str) {
     if (!str) return '';
     const [y, m, d] = str.split('-');
     return `${d}/${m}/${y}`;
   }
 
+  // ── Load & process ──────────────────────────────────────────────
+  async function loadAll() {
+    allExpenses = await fetch('/expenses').then(r => r.json());
+    populateMonthFilter(allExpenses);
+    applyAndRender();
+  }
+
+  function applyAndRender() {
+    let expenses = [...allExpenses];
+
+    // Filters
+    const catFilter   = document.getElementById('filter-cat').value;
+    const monthFilter = document.getElementById('filter-month').value;
+    const fromFilter  = document.getElementById('filter-from').value;
+    const toFilter    = document.getElementById('filter-to').value;
+
+    if (catFilter)   expenses = expenses.filter(e => String(e.category_id) === catFilter);
+    if (monthFilter) expenses = expenses.filter(e => e.date && e.date.slice(0,7) === monthFilter);
+    if (fromFilter)  expenses = expenses.filter(e => e.date && e.date >= fromFilter);
+    if (toFilter)    expenses = expenses.filter(e => e.date && e.date <= toFilter);
+
+    // Sort
+    const sortMode = document.getElementById('sort-select').value;
+    expenses.sort((a, b) => {
+      if (sortMode === 'date-desc')   return (b.date||'0').localeCompare(a.date||'0');
+      if (sortMode === 'date-asc')    return (a.date||'0').localeCompare(b.date||'0');
+      if (sortMode === 'amount-desc') return b.amount - a.amount;
+      if (sortMode === 'amount-asc')  return a.amount - b.amount;
+      return 0;
+    });
+
+    // Total of filtered set
+    const filteredTotal = expenses.reduce((s, e) => s + e.amount, 0);
+    const grandTotal    = allExpenses.reduce((s, e) => s + e.amount, 0);
+    document.getElementById('total').textContent = fmt(filteredTotal);
+    const isFiltered = expenses.length !== allExpenses.length;
+    document.getElementById('total-sub').textContent = isFiltered
+      ? `${expenses.length} of ${allExpenses.length} expenses\nAll time: ${fmt(grandTotal)}`
+      : `${allExpenses.length} expense${allExpenses.length !== 1 ? 's' : ''}`;
+
+    // Count badge
+    document.getElementById('list-count').textContent =
+      expenses.length === allExpenses.length
+        ? `${expenses.length} total`
+        : `${expenses.length} shown`;
+
+    // Update clear button style
+    const hasFilters = catFilter || monthFilter || fromFilter || toFilter;
+    const clearBtn = document.getElementById('clear-btn');
+    clearBtn.classList.toggle('has-filters', !!hasFilters);
+
+    // Highlight active selects
+    document.getElementById('filter-cat').classList.toggle('active', !!catFilter);
+    document.getElementById('filter-month').classList.toggle('active', !!monthFilter);
+    document.getElementById('filter-from').classList.toggle('active', !!fromFilter);
+    document.getElementById('filter-to').classList.toggle('active', !!toFilter);
+    document.getElementById('group-select').classList.toggle('active', document.getElementById('group-select').value !== 'none');
+    document.getElementById('sort-select').classList.toggle('active', sortMode !== 'date-desc');
+
+    // Group
+    const groupMode = document.getElementById('group-select').value;
+    if (groupMode === 'month') {
+      renderGrouped(expenses, e => e.date ? fmtMonth(e.date.slice(0,7)) : 'No date', e => e.date ? e.date.slice(0,7) : '');
+    } else if (groupMode === 'category') {
+      renderGrouped(expenses, e => e.category_name || 'Uncategorised', e => e.category_name || '');
+    } else {
+      renderFlat(expenses);
+    }
+  }
+
+  function renderFlat(expenses) {
+    const list = document.getElementById('list');
+    if (!expenses.length) {
+      list.innerHTML = '<li class="empty-state">No expenses match the current filters.</li>';
+      return;
+    }
+    list.innerHTML = expenses.map(itemHtml).join('');
+  }
+
+  function renderGrouped(expenses, labelFn, keyFn) {
+    const list = document.getElementById('list');
+    if (!expenses.length) {
+      list.innerHTML = '<li class="empty-state">No expenses match the current filters.</li>';
+      return;
+    }
+    // Build ordered groups preserving current sort
+    const groups = [];
+    const groupMap = {};
+    expenses.forEach(e => {
+      const key = keyFn(e);
+      const lbl = labelFn(e);
+      if (!groupMap[key]) {
+        groupMap[key] = { label: lbl, items: [], total: 0 };
+        groups.push(groupMap[key]);
+      }
+      groupMap[key].items.push(e);
+      groupMap[key].total += e.amount;
+    });
+
+    list.innerHTML = groups.map(g => `
+      <li class="group-header">
+        <span class="group-name">${esc(g.label || 'No date')}</span>
+        <span class="group-total">${fmt(g.total)}</span>
+      </li>
+      ${g.items.map(itemHtml).join('')}
+    `).join('');
+  }
+
+  function itemHtml(e) {
+    const datePart = e.date ? `<span>${fmtDate(e.date)}</span>` : '';
+    const catPart  = e.category_name ? `<span class="expense-cat">${esc(e.category_name)}</span>` : '';
+    return `
+      <li class="expense-item" id="item-${e.id}">
+        <div class="expense-info">
+          <div class="expense-name">${esc(e.name)}</div>
+          <div class="expense-meta">${datePart}${catPart}</div>
+        </div>
+        <span class="expense-amount">${fmt(e.amount)}</span>
+        <button class="del-btn" onclick="deleteExpense(${e.id})" title="Delete">&#x2715;</button>
+      </li>`;
+  }
+
+  // ── Add expense ─────────────────────────────────────────────────
   async function addExpense() {
     const nameEl   = document.getElementById('name');
     const amountEl = document.getElementById('amount');
@@ -422,23 +572,18 @@
     const amount = parseFloat(amountEl.value);
     const date   = dateEl.value || null;
 
-    if (!name)           { errorEl.textContent = 'Please enter a description.'; return; }
+    if (!name)          { errorEl.textContent = 'Please enter a description.'; return; }
     if (!amount || amount <= 0) { errorEl.textContent = 'Please enter a valid amount.'; return; }
-
-    const body = { name, amount, date, category_id: selectedCatId };
 
     const res = await fetch('/expenses', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+      body: JSON.stringify({ name, amount, date, category_id: selectedCatId })
     });
 
     if (res.ok) {
-      nameEl.value   = '';
-      amountEl.value = '';
-      dateEl.value   = todayStr;
-      catInput.value = '';
-      selectedCatId  = null;
+      nameEl.value = ''; amountEl.value = ''; dateEl.value = today();
+      catInput.value = ''; selectedCatId = null;
       nameEl.focus();
       await loadAll();
     } else {
@@ -447,6 +592,7 @@
     }
   }
 
+  // ── Delete ──────────────────────────────────────────────────────
   async function deleteExpense(id) {
     const item = document.getElementById('item-' + id);
     if (item) item.style.opacity = '0.4';
@@ -454,17 +600,23 @@
     await loadAll();
   }
 
-  // Enter key nav
-  document.getElementById('name').addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('amount').focus();
-  });
-  document.getElementById('amount').addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('date').focus();
-  });
-  document.getElementById('date').addEventListener('keydown', e => {
-    if (e.key === 'Enter') catInput.focus();
-  });
+  // ── Clear all filters ───────────────────────────────────────────
+  function clearAll() {
+    document.getElementById('filter-cat').value   = '';
+    document.getElementById('filter-month').value = '';
+    document.getElementById('filter-from').value  = '';
+    document.getElementById('filter-to').value    = '';
+    document.getElementById('sort-select').value  = 'date-desc';
+    document.getElementById('group-select').value = 'none';
+    applyAndRender();
+  }
 
+  // ── Keyboard nav ────────────────────────────────────────────────
+  document.getElementById('name').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('amount').focus(); });
+  document.getElementById('amount').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('date').focus(); });
+  document.getElementById('date').addEventListener('keydown', e => { if (e.key === 'Enter') catInput.focus(); });
+
+  // ── Init ────────────────────────────────────────────────────────
   loadCategories();
   loadAll();
 </script>
