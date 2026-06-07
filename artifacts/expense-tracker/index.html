@@ -6,300 +6,113 @@
   <title>Expense Tracker</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f0f2f5; min-height: 100vh; padding-bottom: 60px; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f0f2f5;
-      min-height: 100vh;
-      padding-bottom: 60px;
-    }
-
-    /* ── Nav ─────────────────────────────────────────────────── */
-    nav {
-      background: #1a1a2e;
-      display: flex;
-      align-items: center;
-      padding: 0 24px;
-      height: 52px;
-      gap: 4px;
-    }
+    nav { background: #1a1a2e; display: flex; align-items: center; padding: 0 24px; height: 52px; gap: 4px; }
     .nav-brand { font-weight: 700; color: #fff; font-size: 1rem; margin-right: 24px; letter-spacing: -0.3px; }
-    nav a {
-      color: rgba(255,255,255,0.55);
-      text-decoration: none;
-      font-size: 0.88rem;
-      font-weight: 500;
-      padding: 6px 12px;
-      border-radius: 6px;
-      transition: color 0.15s, background 0.15s;
-    }
+    nav a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.88rem; font-weight: 500; padding: 6px 12px; border-radius: 6px; transition: color 0.15s, background 0.15s; }
     nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
     nav a.active { color: #fff; background: rgba(255,255,255,0.12); }
 
     .page { max-width: 560px; margin: 0 auto; padding: 28px 16px 0; }
 
-    /* ── Total card ──────────────────────────────────────────── */
+    /* ── Total card ─────────────────────────────────────────────── */
     .total-card {
       background: #1a1a2e;
       color: #fff;
       border-radius: 14px;
-      padding: 20px 24px;
+      padding: 20px 24px 18px;
       margin-bottom: 16px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
     }
-    .total-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.55; }
-    .total-amount { font-size: 2rem; font-weight: 700; letter-spacing: -1px; margin-top: 2px; }
-    .total-sub { text-align: right; font-size: 0.78rem; opacity: 0.55; line-height: 1.6; white-space: pre-line; }
+    .total-top { display: flex; align-items: flex-start; justify-content: space-between; }
+    .total-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.55; margin-bottom: 3px; }
+    .total-amount { font-size: 2rem; font-weight: 700; letter-spacing: -1px; }
+    .total-month-label { font-size: 0.72rem; opacity: 0.45; margin-top: 2px; }
+    .budget-link {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      padding: 4px 9px;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+    .budget-link:hover { color: #fff; border-color: rgba(255,255,255,0.35); }
 
-    /* ── Card ────────────────────────────────────────────────── */
-    .card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 18px 20px;
-      margin-bottom: 14px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-    }
+    /* Budget bar */
+    .budget-bar-wrap { margin-top: 14px; }
+    .budget-bar-labels { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+    .budget-remaining-label { font-size: 0.8rem; font-weight: 600; opacity: 0.85; }
+    .budget-remaining-label.over { color: #ff6b6b; opacity: 1; }
+    .budget-total-label { font-size: 0.72rem; opacity: 0.45; }
+    .budget-bar-track { background: rgba(255,255,255,0.12); border-radius: 99px; height: 5px; overflow: hidden; }
+    .budget-bar-fill { height: 100%; border-radius: 99px; background: #6ee7b7; transition: width 0.4s ease; }
+    .budget-bar-fill.warn { background: #fbbf24; }
+    .budget-bar-fill.over { background: #ff6b6b; }
+
+    /* ── Card ───────────────────────────────────────────────────── */
+    .card { background: #fff; border-radius: 14px; padding: 18px 20px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
     .card-title { font-size: 0.85rem; font-weight: 600; color: #666; margin-bottom: 12px; }
 
-    /* ── Add form ────────────────────────────────────────────── */
     .form-grid { display: grid; grid-template-columns: 1fr 110px; gap: 8px; }
     .form-grid .full { grid-column: 1 / -1; }
     .field-label { display: block; font-size: 0.7rem; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
-    input[type="text"], input[type="number"], input[type="date"] {
-      width: 100%;
-      border: 1.5px solid #e4e4e4;
-      border-radius: 8px;
-      padding: 8px 11px;
-      font-size: 0.9rem;
-      outline: none;
-      background: #fafafa;
-      color: #1a1a2e;
-      transition: border-color 0.15s, background 0.15s;
-    }
+    input[type="text"], input[type="number"], input[type="date"] { width: 100%; border: 1.5px solid #e4e4e4; border-radius: 8px; padding: 8px 11px; font-size: 0.9rem; outline: none; background: #fafafa; color: #1a1a2e; transition: border-color 0.15s, background 0.15s; }
     input:focus { border-color: #5b6af5; background: #fff; }
 
-    /* Searchable select */
     .select-wrap { position: relative; }
-    .dropdown {
-      position: absolute;
-      top: calc(100% + 4px); left: 0; right: 0;
-      background: #fff;
-      border: 1.5px solid #e4e4e4;
-      border-radius: 10px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      max-height: 180px;
-      overflow-y: auto;
-      z-index: 300;
-      display: none;
-    }
+    .dropdown { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; border: 1.5px solid #e4e4e4; border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.1); max-height: 180px; overflow-y: auto; z-index: 300; display: none; }
     .dropdown.open { display: block; }
     .dropdown-item { padding: 8px 13px; font-size: 0.88rem; cursor: pointer; color: #1a1a2e; transition: background 0.1s; }
     .dropdown-item:hover { background: #f0f1ff; }
     .dropdown-empty { padding: 9px 13px; font-size: 0.85rem; color: #aaa; }
 
-    .btn-primary {
-      width: 100%; margin-top: 12px;
-      background: #5b6af5; color: #fff;
-      border: none; border-radius: 8px;
-      padding: 10px 18px; font-size: 0.92rem; font-weight: 600;
-      cursor: pointer; transition: background 0.15s, transform 0.1s;
-    }
+    .btn-primary { width: 100%; margin-top: 12px; background: #5b6af5; color: #fff; border: none; border-radius: 8px; padding: 10px 18px; font-size: 0.92rem; font-weight: 600; cursor: pointer; transition: background 0.15s, transform 0.1s; }
     .btn-primary:hover { background: #4a57e0; }
     .btn-primary:active { transform: scale(0.98); }
     .error-msg { color: #e53935; font-size: 0.79rem; margin-top: 7px; min-height: 15px; }
 
-    /* ── List header + popup trigger ────────────────────────── */
-    .list-card {
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-      overflow: visible; /* allow popup to overflow */
-    }
-    .list-header {
-      padding: 12px 16px 12px 20px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: #666;
-      border-bottom: 1px solid #f2f2f2;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-    }
+    /* ── List ───────────────────────────────────────────────────── */
+    .list-card { background: #fff; border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: visible; }
+    .list-header { padding: 12px 16px 12px 20px; font-size: 0.88rem; font-weight: 600; color: #666; border-bottom: 1px solid #f2f2f2; display: flex; align-items: center; justify-content: space-between; position: relative; }
     .list-header-left { display: flex; align-items: center; gap: 10px; }
     .list-count { font-size: 0.78rem; color: #bbb; font-weight: 500; }
 
-    /* Popup trigger button */
-    .filter-trigger {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 8px;
-      border: 1.5px solid #e4e4e4;
-      background: #fafafa;
-      color: #666;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s, color 0.15s;
-      white-space: nowrap;
-    }
+    .filter-trigger { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; border: 1.5px solid #e4e4e4; background: #fafafa; color: #666; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: border-color 0.15s, background 0.15s, color 0.15s; white-space: nowrap; }
     .filter-trigger:hover { border-color: #5b6af5; color: #5b6af5; background: #f0f1ff; }
-    .filter-trigger.active {
-      border-color: #5b6af5;
-      background: #5b6af5;
-      color: #fff;
-    }
-    .filter-trigger svg { flex-shrink: 0; }
-    .filter-badge {
-      background: #fff;
-      color: #5b6af5;
-      border-radius: 10px;
-      font-size: 0.68rem;
-      font-weight: 800;
-      padding: 0px 5px;
-      line-height: 16px;
-      display: none;
-    }
+    .filter-trigger.active { border-color: #5b6af5; background: #5b6af5; color: #fff; }
+    .filter-badge { background: #fff; color: #5b6af5; border-radius: 10px; font-size: 0.68rem; font-weight: 800; padding: 0 5px; line-height: 16px; display: none; }
     .filter-trigger.active .filter-badge { display: inline-block; }
 
-    /* ── Popup panel ─────────────────────────────────────────── */
-    .popup-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 199;
-    }
+    .popup-overlay { display: none; position: fixed; inset: 0; z-index: 199; }
     .popup-overlay.open { display: block; }
-
-    .popup-panel {
-      position: absolute;
-      top: calc(100% + 6px);
-      right: 0;
-      width: 340px;
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08);
-      border: 1px solid #eee;
-      z-index: 200;
-      overflow: hidden;
-      transform-origin: top right;
-      animation: popIn 0.16s ease;
-    }
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.95) translateY(-4px); }
-      to   { opacity: 1; transform: scale(1)    translateY(0); }
-    }
-
-    .popup-section {
-      padding: 14px 16px;
-      border-bottom: 1px solid #f2f2f2;
-    }
+    .popup-panel { position: absolute; top: calc(100% + 6px); right: 0; width: 340px; background: #fff; border-radius: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #eee; z-index: 200; overflow: hidden; transform-origin: top right; animation: popIn 0.16s ease; }
+    @keyframes popIn { from { opacity:0; transform: scale(0.95) translateY(-4px); } to { opacity:1; transform: scale(1) translateY(0); } }
+    .popup-section { padding: 14px 16px; border-bottom: 1px solid #f2f2f2; }
     .popup-section:last-child { border-bottom: none; }
-    .popup-section-title {
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #bbb;
-      margin-bottom: 8px;
-    }
-
-    /* Segmented control for sort/group */
+    .popup-section-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #bbb; margin-bottom: 8px; }
     .seg-group { display: flex; gap: 4px; flex-wrap: wrap; }
-    .seg-btn {
-      flex: 1;
-      min-width: fit-content;
-      padding: 6px 10px;
-      border-radius: 7px;
-      border: 1.5px solid #e8e8e8;
-      background: #fafafa;
-      color: #666;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.12s;
-      white-space: nowrap;
-    }
+    .seg-btn { flex: 1; min-width: fit-content; padding: 6px 10px; border-radius: 7px; border: 1.5px solid #e8e8e8; background: #fafafa; color: #666; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.12s; white-space: nowrap; }
     .seg-btn:hover { border-color: #c0c4ff; background: #f0f1ff; color: #5b6af5; }
-    .seg-btn.selected {
-      border-color: #5b6af5;
-      background: #5b6af5;
-      color: #fff;
-    }
-
-    /* Filter inputs inside popup */
+    .seg-btn.selected { border-color: #5b6af5; background: #5b6af5; color: #fff; }
     .popup-filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .popup-field { display: flex; flex-direction: column; gap: 4px; }
     .popup-field label { font-size: 0.7rem; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
-    select.popup-select, input.popup-input {
-      border: 1.5px solid #e4e4e4;
-      border-radius: 7px;
-      padding: 7px 10px;
-      font-size: 0.84rem;
-      background: #fafafa;
-      color: #1a1a2e;
-      outline: none;
-      width: 100%;
-      transition: border-color 0.15s, background 0.15s;
-    }
+    select.popup-select, input.popup-input { border: 1.5px solid #e4e4e4; border-radius: 7px; padding: 7px 10px; font-size: 0.84rem; background: #fafafa; color: #1a1a2e; outline: none; width: 100%; transition: border-color 0.15s, background 0.15s; }
     select.popup-select:focus, input.popup-input:focus { border-color: #5b6af5; background: #fff; }
-    select.popup-select.has-value, input.popup-input.has-value {
-      border-color: #5b6af5;
-      background: #eef0ff;
-      color: #3a49c5;
-      font-weight: 600;
-    }
-
-    /* Footer */
-    .popup-footer {
-      padding: 10px 16px;
-      background: #f8f9ff;
-      display: flex;
-      justify-content: flex-end;
-    }
-    .clear-btn {
-      padding: 6px 14px;
-      border-radius: 7px;
-      border: 1.5px solid #e4e4e4;
-      background: none;
-      color: #999;
-      font-size: 0.81rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: color 0.15s, border-color 0.15s, background 0.15s;
-    }
+    select.popup-select.has-value, input.popup-input.has-value { border-color: #5b6af5; background: #eef0ff; color: #3a49c5; font-weight: 600; }
+    .popup-footer { padding: 10px 16px; background: #f8f9ff; display: flex; justify-content: flex-end; }
+    .clear-btn { padding: 6px 14px; border-radius: 7px; border: 1.5px solid #e4e4e4; background: none; color: #999; font-size: 0.81rem; font-weight: 600; cursor: pointer; transition: color 0.15s, border-color 0.15s, background 0.15s; }
     .clear-btn:hover { color: #e53935; border-color: #e53935; background: #fdecea; }
     .clear-btn.has-active { color: #5b6af5; border-color: #5b6af5; }
 
-    /* ── Expense list ────────────────────────────────────────── */
     .expense-list { list-style: none; overflow: hidden; border-radius: 0 0 14px 14px; }
-    .group-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 7px 20px;
-      background: #f7f8fc;
-      border-bottom: 1px solid #ebebeb;
-      border-top: 1px solid #ebebeb;
-    }
+    .group-header { display: flex; align-items: center; justify-content: space-between; padding: 7px 20px; background: #f7f8fc; border-bottom: 1px solid #ebebeb; border-top: 1px solid #ebebeb; }
     .group-name { font-size: 0.78rem; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
     .group-total { font-size: 0.78rem; font-weight: 700; color: #5b6af5; }
-
-    .expense-item {
-      display: flex;
-      align-items: center;
-      padding: 12px 20px;
-      border-bottom: 1px solid #f4f4f4;
-      gap: 10px;
-      transition: background 0.1s;
-      animation: slideIn 0.16s ease;
-    }
-    @keyframes slideIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+    .expense-item { display: flex; align-items: center; padding: 12px 20px; border-bottom: 1px solid #f4f4f4; gap: 10px; transition: background 0.1s; animation: slideIn 0.16s ease; }
+    @keyframes slideIn { from { opacity:0; transform: translateY(-4px); } to { opacity:1; transform: translateY(0); } }
     .expense-item:last-child { border-bottom: none; }
     .expense-item:hover { background: #fafafa; }
     .expense-info { flex: 1; min-width: 0; }
@@ -307,11 +120,7 @@
     .expense-meta { font-size: 0.74rem; color: #bbb; margin-top: 2px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
     .expense-cat { background: #eef0ff; color: #5b6af5; border-radius: 4px; padding: 1px 6px; font-size: 0.7rem; font-weight: 600; }
     .expense-amount { font-size: 0.9rem; font-weight: 600; color: #222; flex-shrink: 0; }
-    .del-btn {
-      background: none; border: none; cursor: pointer;
-      color: #ccc; font-size: 0.95rem; padding: 4px 6px;
-      border-radius: 6px; transition: color 0.15s, background 0.15s; flex-shrink: 0;
-    }
+    .del-btn { background: none; border: none; cursor: pointer; color: #ccc; font-size: 0.95rem; padding: 4px 6px; border-radius: 6px; transition: color 0.15s, background 0.15s; flex-shrink: 0; }
     .del-btn:hover { color: #e53935; background: #fdecea; }
     .empty-state { padding: 30px 20px; text-align: center; color: #bbb; font-size: 0.87rem; }
   </style>
@@ -321,18 +130,31 @@
 <nav>
   <span class="nav-brand">💰 Expenses</span>
   <a href="/" class="active">Tracker</a>
+  <a href="/budget-page">Budget</a>
   <a href="/categories-page">Categories</a>
 </nav>
 
 <div class="page">
 
-  <!-- Total -->
+  <!-- Total card -->
   <div class="total-card">
-    <div>
-      <div class="total-label">Total Spending</div>
-      <div class="total-amount" id="total">$0.00</div>
+    <div class="total-top">
+      <div>
+        <div class="total-label">Spent this month</div>
+        <div class="total-amount" id="total">$0.00</div>
+        <div class="total-month-label" id="total-month-label"></div>
+      </div>
+      <a href="/budget-page" class="budget-link" id="budget-link">Set budget →</a>
     </div>
-    <div class="total-sub" id="total-sub"></div>
+    <div class="budget-bar-wrap" id="budget-bar-wrap" style="display:none;">
+      <div class="budget-bar-labels">
+        <span class="budget-remaining-label" id="budget-remaining-label"></span>
+        <span class="budget-total-label" id="budget-total-label"></span>
+      </div>
+      <div class="budget-bar-track">
+        <div class="budget-bar-fill" id="budget-bar-fill" style="width:0%"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Add Expense -->
@@ -363,42 +185,30 @@
     <button class="btn-primary" onclick="addExpense()">Add Expense</button>
   </div>
 
-  <!-- Expense List with popup controls -->
+  <!-- Expense list -->
   <div class="list-card">
     <div class="list-header">
       <div class="list-header-left">
         <span>Expenses</span>
         <span class="list-count" id="list-count"></span>
       </div>
-
-      <!-- Trigger button -->
       <div style="position:relative;">
         <button class="filter-trigger" id="filter-trigger" onclick="togglePopup(event)">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-            <path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
           Sort &amp; Filter
           <span class="filter-badge" id="filter-badge">0</span>
         </button>
-
-        <!-- Overlay (closes popup on outside click) -->
         <div class="popup-overlay" id="popup-overlay" onclick="closePopup()"></div>
-
-        <!-- Popup panel -->
         <div class="popup-panel" id="popup-panel" style="display:none;">
-
-          <!-- Sort -->
           <div class="popup-section">
             <div class="popup-section-title">Sort by</div>
             <div class="seg-group" id="sort-group">
-              <button class="seg-btn selected" data-value="date-desc"  onclick="setSort('date-desc')">Newest</button>
-              <button class="seg-btn"           data-value="date-asc"   onclick="setSort('date-asc')">Oldest</button>
+              <button class="seg-btn selected" data-value="date-desc"   onclick="setSort('date-desc')">Newest</button>
+              <button class="seg-btn"           data-value="date-asc"    onclick="setSort('date-asc')">Oldest</button>
               <button class="seg-btn"           data-value="amount-desc" onclick="setSort('amount-desc')">$ High–Low</button>
               <button class="seg-btn"           data-value="amount-asc"  onclick="setSort('amount-asc')">$ Low–High</button>
             </div>
           </div>
-
-          <!-- Group -->
           <div class="popup-section">
             <div class="popup-section-title">Group by</div>
             <div class="seg-group" id="group-group">
@@ -407,22 +217,16 @@
               <button class="seg-btn"           data-value="category" onclick="setGroup('category')">Category</button>
             </div>
           </div>
-
-          <!-- Filters -->
           <div class="popup-section">
             <div class="popup-section-title">Filter</div>
             <div class="popup-filter-grid">
               <div class="popup-field">
                 <label>Category</label>
-                <select class="popup-select" id="filter-cat" onchange="applyAndRender()">
-                  <option value="">All</option>
-                </select>
+                <select class="popup-select" id="filter-cat" onchange="applyAndRender()"><option value="">All</option></select>
               </div>
               <div class="popup-field">
                 <label>Month</label>
-                <select class="popup-select" id="filter-month" onchange="applyAndRender()">
-                  <option value="">All</option>
-                </select>
+                <select class="popup-select" id="filter-month" onchange="applyAndRender()"><option value="">All</option></select>
               </div>
               <div class="popup-field">
                 <label>From date</label>
@@ -434,65 +238,68 @@
               </div>
             </div>
           </div>
-
-          <!-- Footer -->
           <div class="popup-footer">
             <button class="clear-btn" id="clear-btn" onclick="clearAll()">Reset all</button>
           </div>
-
-        </div><!-- /popup-panel -->
+        </div>
       </div>
-    </div><!-- /list-header -->
-
+    </div>
     <ul class="expense-list" id="list"></ul>
   </div>
 
-</div><!-- /page -->
+</div>
 
 <script>
-  const fmt  = n => '$' + Number(n).toFixed(2);
-  const esc  = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const fmt   = n => '$' + Number(n).toFixed(2);
+  const esc   = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const today = () => new Date().toLocaleDateString('en-CA');
 
-  document.getElementById('date').value = today();
+  const NOW        = new Date();
+  const THIS_MONTH = `${NOW.getFullYear()}-${String(NOW.getMonth()+1).padStart(2,'0')}`;
+  const MONTH_NAME = NOW.toLocaleString('default', { month: 'long', year: 'numeric' });
 
-  // ── State ──────────────────────────────────────────────────────
+  document.getElementById('date').value = today();
+  document.getElementById('total-month-label').textContent = MONTH_NAME;
+
   let allExpenses   = [];
   let allCategories = [];
   let selectedCatId = null;
   let sortMode  = 'date-desc';
   let groupMode = 'none';
 
-  // ── Popup ──────────────────────────────────────────────────────
-  function togglePopup(e) {
-    e.stopPropagation();
-    const panel   = document.getElementById('popup-panel');
-    const overlay = document.getElementById('popup-overlay');
-    const isOpen  = panel.style.display === 'block';
-    panel.style.display   = isOpen ? 'none' : 'block';
-    overlay.classList.toggle('open', !isOpen);
-    document.getElementById('filter-trigger').classList.toggle('active', !isOpen);
-  }
-  function closePopup() {
-    document.getElementById('popup-panel').style.display = 'none';
-    document.getElementById('popup-overlay').classList.remove('open');
-    // keep trigger active if filters are set
-    updateTriggerState();
+  // ── Budget total card ─────────────────────────────────────────
+  async function loadBudgetBar() {
+    const [monthData, budget] = await Promise.all([
+      fetch(`/expenses/month/${THIS_MONTH}`).then(r => r.json()),
+      fetch(`/budgets/${THIS_MONTH}`).then(r => r.json()).catch(() => null)
+    ]);
+    const spent = monthData?.total ?? 0;
+    document.getElementById('total').textContent = fmt(spent);
+
+    const wrap = document.getElementById('budget-bar-wrap');
+    const link = document.getElementById('budget-link');
+    if (budget && budget.total_amount > 0) {
+      link.textContent = 'Edit budget →';
+      const remaining = budget.total_amount - spent;
+      const pct       = Math.min((spent / budget.total_amount) * 100, 100);
+      const remLabel  = document.getElementById('budget-remaining-label');
+      const totLabel  = document.getElementById('budget-total-label');
+      const bar       = document.getElementById('budget-bar-fill');
+      remLabel.textContent = remaining >= 0
+        ? `${fmt(remaining)} remaining`
+        : `${fmt(Math.abs(remaining))} over budget`;
+      remLabel.className = 'budget-remaining-label' + (remaining < 0 ? ' over' : '');
+      totLabel.textContent = `of ${fmt(budget.total_amount)} budget`;
+      bar.style.width = pct + '%';
+      bar.className = 'budget-bar-fill' + (pct >= 100 ? ' over' : pct >= 80 ? ' warn' : '');
+      wrap.style.display = 'block';
+    } else {
+      link.textContent = 'Set budget →';
+      wrap.style.display = 'none';
+    }
   }
 
-  // ── Sort / Group segment controls ──────────────────────────────
-  function setSort(val) {
-    sortMode = val;
-    document.querySelectorAll('#sort-group .seg-btn').forEach(b => b.classList.toggle('selected', b.dataset.value === val));
-    applyAndRender();
-  }
-  function setGroup(val) {
-    groupMode = val;
-    document.querySelectorAll('#group-group .seg-btn').forEach(b => b.classList.toggle('selected', b.dataset.value === val));
-    applyAndRender();
-  }
-
-  // ── Category searchable input ───────────────────────────────────
+  // ── Category dropdown ─────────────────────────────────────────
   const catInput    = document.getElementById('cat-input');
   const catDropdown = document.getElementById('cat-dropdown');
 
@@ -501,235 +308,138 @@
     populateCategoryFilter();
     renderCatDropdown('');
   }
-
   function renderCatDropdown(q) {
-    const filtered = q
-      ? allCategories.filter(c => c.name.toLowerCase().includes(q.toLowerCase()))
-      : allCategories;
+    const filtered = q ? allCategories.filter(c => c.name.toLowerCase().includes(q.toLowerCase())) : allCategories;
     catDropdown.innerHTML = filtered.length
       ? filtered.map(c => `<div class="dropdown-item" data-id="${c.id}" data-name="${esc(c.name)}">${esc(c.name)}</div>`).join('')
       : `<div class="dropdown-empty">No categories found</div>`;
     catDropdown.querySelectorAll('.dropdown-item').forEach(el => {
-      el.addEventListener('mousedown', e => {
-        e.preventDefault();
-        selectedCatId = parseInt(el.dataset.id);
-        catInput.value = el.dataset.name;
-        catDropdown.classList.remove('open');
-      });
+      el.addEventListener('mousedown', e => { e.preventDefault(); selectedCatId = parseInt(el.dataset.id); catInput.value = el.dataset.name; catDropdown.classList.remove('open'); });
     });
   }
-
   catInput.addEventListener('focus', () => { renderCatDropdown(catInput.value); catDropdown.classList.add('open'); });
   catInput.addEventListener('input', () => { selectedCatId = null; renderCatDropdown(catInput.value); catDropdown.classList.add('open'); });
   catInput.addEventListener('blur', () => setTimeout(() => catDropdown.classList.remove('open'), 150));
-  document.addEventListener('click', e => {
-    if (!document.getElementById('cat-wrap').contains(e.target)) catDropdown.classList.remove('open');
-  });
+  document.addEventListener('click', e => { if (!document.getElementById('cat-wrap').contains(e.target)) catDropdown.classList.remove('open'); });
 
-  // ── Filter helpers ──────────────────────────────────────────────
+  // ── Filter helpers ────────────────────────────────────────────
   function populateCategoryFilter() {
     const sel = document.getElementById('filter-cat');
     const cur = sel.value;
-    sel.innerHTML = '<option value="">All</option>' +
-      allCategories.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+    sel.innerHTML = '<option value="">All</option>' + allCategories.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
     sel.value = cur;
   }
-
   function populateMonthFilter(expenses) {
     const sel = document.getElementById('filter-month');
     const cur = sel.value;
     const months = [...new Set(expenses.filter(e => e.date).map(e => e.date.slice(0,7)))].sort().reverse();
-    sel.innerHTML = '<option value="">All</option>' +
-      months.map(m => `<option value="${m}">${fmtMonth(m)}</option>`).join('');
+    sel.innerHTML = '<option value="">All</option>' + months.map(m => `<option value="${m}">${fmtMonth(m)}</option>`).join('');
     sel.value = months.includes(cur) ? cur : '';
   }
+  const fmtMonth = ym => { if (!ym) return ''; const [y,m] = ym.split('-'); return new Date(+y,+m-1,1).toLocaleString('default',{month:'long',year:'numeric'}); };
+  const fmtDate  = str => { if (!str) return ''; const [y,m,d] = str.split('-'); return `${d}/${m}/${y}`; };
 
-  function fmtMonth(ym) {
-    if (!ym) return '';
-    const [y, m] = ym.split('-');
-    return new Date(+y, +m - 1, 1).toLocaleString('default', { month: 'long', year: 'numeric' });
-  }
-  function fmtDate(str) {
-    if (!str) return '';
-    const [y, m, d] = str.split('-');
-    return `${d}/${m}/${y}`;
-  }
+  // ── Popup ─────────────────────────────────────────────────────
+  function togglePopup(e) { e.stopPropagation(); const p = document.getElementById('popup-panel'), o = document.getElementById('popup-overlay'), open = p.style.display==='block'; p.style.display = open?'none':'block'; o.classList.toggle('open',!open); document.getElementById('filter-trigger').classList.toggle('active',!open); }
+  function closePopup() { document.getElementById('popup-panel').style.display='none'; document.getElementById('popup-overlay').classList.remove('open'); updateTriggerState(); }
+  function setSort(val) { sortMode=val; document.querySelectorAll('#sort-group .seg-btn').forEach(b=>b.classList.toggle('selected',b.dataset.value===val)); applyAndRender(); }
+  function setGroup(val) { groupMode=val; document.querySelectorAll('#group-group .seg-btn').forEach(b=>b.classList.toggle('selected',b.dataset.value===val)); applyAndRender(); }
 
-  // ── Count active controls ───────────────────────────────────────
   function activeCount() {
     let n = 0;
     if (document.getElementById('filter-cat').value)   n++;
     if (document.getElementById('filter-month').value) n++;
     if (document.getElementById('filter-from').value)  n++;
     if (document.getElementById('filter-to').value)    n++;
-    if (sortMode  !== 'date-desc') n++;
-    if (groupMode !== 'none')      n++;
+    if (sortMode !== 'date-desc') n++;
+    if (groupMode !== 'none')     n++;
     return n;
   }
-
   function updateTriggerState() {
     const n = activeCount();
-    const trigger = document.getElementById('filter-trigger');
-    const badge   = document.getElementById('filter-badge');
-    const clearBtn = document.getElementById('clear-btn');
-    // Keep trigger highlighted if popup is closed but controls are active
-    const panelOpen = document.getElementById('popup-panel').style.display === 'block';
-    trigger.classList.toggle('active', panelOpen || n > 0);
-    badge.textContent = n;
-    badge.style.display = n > 0 ? 'inline-block' : 'none';
-    clearBtn.classList.toggle('has-active', n > 0);
-    // Highlight active filter inputs
-    ['filter-cat','filter-month','filter-from','filter-to'].forEach(id => {
-      const el = document.getElementById(id);
-      el.classList.toggle('has-value', !!el.value);
-    });
+    const t = document.getElementById('filter-trigger'), b = document.getElementById('filter-badge');
+    const open = document.getElementById('popup-panel').style.display==='block';
+    t.classList.toggle('active', open || n > 0);
+    b.textContent = n; b.style.display = n > 0 ? 'inline-block' : 'none';
+    document.getElementById('clear-btn').classList.toggle('has-active', n > 0);
+    ['filter-cat','filter-month','filter-from','filter-to'].forEach(id => { const el=document.getElementById(id); el.classList.toggle('has-value',!!el.value); });
   }
 
-  // ── Main pipeline ───────────────────────────────────────────────
+  // ── Main pipeline ─────────────────────────────────────────────
   async function loadAll() {
     allExpenses = await fetch('/expenses').then(r => r.json());
     populateMonthFilter(allExpenses);
     applyAndRender();
+    await loadBudgetBar();
   }
 
   function applyAndRender() {
     let expenses = [...allExpenses];
-
     const catFilter   = document.getElementById('filter-cat').value;
     const monthFilter = document.getElementById('filter-month').value;
     const fromFilter  = document.getElementById('filter-from').value;
     const toFilter    = document.getElementById('filter-to').value;
-
-    if (catFilter)   expenses = expenses.filter(e => String(e.category_id) === catFilter);
-    if (monthFilter) expenses = expenses.filter(e => e.date && e.date.slice(0,7) === monthFilter);
-    if (fromFilter)  expenses = expenses.filter(e => e.date && e.date >= fromFilter);
-    if (toFilter)    expenses = expenses.filter(e => e.date && e.date <= toFilter);
-
-    // Sort
-    expenses.sort((a, b) => {
-      if (sortMode === 'date-desc')   return (b.date||'0').localeCompare(a.date||'0');
-      if (sortMode === 'date-asc')    return (a.date||'0').localeCompare(b.date||'0');
-      if (sortMode === 'amount-desc') return b.amount - a.amount;
-      if (sortMode === 'amount-asc')  return a.amount - b.amount;
+    if (catFilter)   expenses = expenses.filter(e => String(e.category_id)===catFilter);
+    if (monthFilter) expenses = expenses.filter(e => e.date && e.date.slice(0,7)===monthFilter);
+    if (fromFilter)  expenses = expenses.filter(e => e.date && e.date>=fromFilter);
+    if (toFilter)    expenses = expenses.filter(e => e.date && e.date<=toFilter);
+    expenses.sort((a,b) => {
+      if (sortMode==='date-desc')   return (b.date||'0').localeCompare(a.date||'0');
+      if (sortMode==='date-asc')    return (a.date||'0').localeCompare(b.date||'0');
+      if (sortMode==='amount-desc') return b.amount-a.amount;
+      if (sortMode==='amount-asc')  return a.amount-b.amount;
       return 0;
     });
-
-    // Totals
-    const filteredTotal = expenses.reduce((s,e) => s + e.amount, 0);
-    const grandTotal    = allExpenses.reduce((s,e) => s + e.amount, 0);
-    document.getElementById('total').textContent = fmt(filteredTotal);
     const isFiltered = expenses.length !== allExpenses.length;
-    document.getElementById('total-sub').textContent = isFiltered
-      ? `${expenses.length} of ${allExpenses.length} expenses\nAll time: ${fmt(grandTotal)}`
-      : `${allExpenses.length} expense${allExpenses.length !== 1 ? 's' : ''}`;
-    document.getElementById('list-count').textContent =
-      isFiltered ? `${expenses.length} shown` : `${allExpenses.length} total`;
-
+    document.getElementById('list-count').textContent = isFiltered ? `${expenses.length} shown` : `${allExpenses.length} total`;
     updateTriggerState();
-
-    // Render
-    if (groupMode === 'month') {
-      renderGrouped(expenses, e => e.date ? fmtMonth(e.date.slice(0,7)) : 'No date', e => e.date ? e.date.slice(0,7) : '\x00');
-    } else if (groupMode === 'category') {
-      renderGrouped(expenses, e => e.category_name || 'Uncategorised', e => e.category_name || '\x00');
-    } else {
-      renderFlat(expenses);
-    }
+    if (groupMode==='month')    renderGrouped(expenses, e => e.date?fmtMonth(e.date.slice(0,7)):'No date', e => e.date?e.date.slice(0,7):'\x00');
+    else if (groupMode==='category') renderGrouped(expenses, e => e.category_name||'Uncategorised', e => e.category_name||'\x00');
+    else renderFlat(expenses);
   }
 
   function renderFlat(expenses) {
-    const list = document.getElementById('list');
-    list.innerHTML = expenses.length
-      ? expenses.map(itemHtml).join('')
-      : '<li class="empty-state">No expenses match the current filters.</li>';
+    document.getElementById('list').innerHTML = expenses.length ? expenses.map(itemHtml).join('') : '<li class="empty-state">No expenses match the current filters.</li>';
   }
-
   function renderGrouped(expenses, labelFn, keyFn) {
-    const list = document.getElementById('list');
-    if (!expenses.length) { list.innerHTML = '<li class="empty-state">No expenses match the current filters.</li>'; return; }
-    const groups = [];
-    const map = {};
-    expenses.forEach(e => {
-      const key = keyFn(e), lbl = labelFn(e);
-      if (!map[key]) { map[key] = { label: lbl, items: [], total: 0 }; groups.push(map[key]); }
-      map[key].items.push(e);
-      map[key].total += e.amount;
-    });
-    list.innerHTML = groups.map(g => `
-      <li class="group-header">
-        <span class="group-name">${esc(g.label)}</span>
-        <span class="group-total">${fmt(g.total)}</span>
-      </li>
-      ${g.items.map(itemHtml).join('')}
-    `).join('');
+    if (!expenses.length) { document.getElementById('list').innerHTML='<li class="empty-state">No expenses match the current filters.</li>'; return; }
+    const groups=[], map={};
+    expenses.forEach(e => { const k=keyFn(e),l=labelFn(e); if(!map[k]){map[k]={label:l,items:[],total:0};groups.push(map[k]);} map[k].items.push(e); map[k].total+=e.amount; });
+    document.getElementById('list').innerHTML = groups.map(g => `<li class="group-header"><span class="group-name">${esc(g.label)}</span><span class="group-total">${fmt(g.total)}</span></li>${g.items.map(itemHtml).join('')}`).join('');
   }
-
   function itemHtml(e) {
-    const datePart = e.date ? `<span>${fmtDate(e.date)}</span>` : '';
-    const catPart  = e.category_name ? `<span class="expense-cat">${esc(e.category_name)}</span>` : '';
-    return `
-      <li class="expense-item" id="item-${e.id}">
-        <div class="expense-info">
-          <div class="expense-name">${esc(e.name)}</div>
-          <div class="expense-meta">${datePart}${catPart}</div>
-        </div>
-        <span class="expense-amount">${fmt(e.amount)}</span>
-        <button class="del-btn" onclick="deleteExpense(${e.id})" title="Delete">&#x2715;</button>
-      </li>`;
+    const d = e.date ? `<span>${fmtDate(e.date)}</span>` : '';
+    const c = e.category_name ? `<span class="expense-cat">${esc(e.category_name)}</span>` : '';
+    return `<li class="expense-item" id="item-${e.id}"><div class="expense-info"><div class="expense-name">${esc(e.name)}</div><div class="expense-meta">${d}${c}</div></div><span class="expense-amount">${fmt(e.amount)}</span><button class="del-btn" onclick="deleteExpense(${e.id})" title="Delete">&#x2715;</button></li>`;
   }
 
-  // ── Add expense ─────────────────────────────────────────────────
   async function addExpense() {
-    const nameEl   = document.getElementById('name');
-    const amountEl = document.getElementById('amount');
-    const dateEl   = document.getElementById('date');
-    const errorEl  = document.getElementById('error');
-    errorEl.textContent = '';
-    const name   = nameEl.value.trim();
-    const amount = parseFloat(amountEl.value);
-    const date   = dateEl.value || null;
-    if (!name)           { errorEl.textContent = 'Please enter a description.'; return; }
-    if (!amount || amount <= 0) { errorEl.textContent = 'Please enter a valid amount.'; return; }
-    const res = await fetch('/expenses', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, amount, date, category_id: selectedCatId })
-    });
-    if (res.ok) {
-      nameEl.value = ''; amountEl.value = ''; dateEl.value = today();
-      catInput.value = ''; selectedCatId = null;
-      nameEl.focus();
-      await loadAll();
-    } else {
-      const data = await res.json();
-      errorEl.textContent = data.detail || 'Something went wrong.';
-    }
+    const nameEl=document.getElementById('name'), amountEl=document.getElementById('amount'), dateEl=document.getElementById('date'), errorEl=document.getElementById('error');
+    errorEl.textContent='';
+    const name=nameEl.value.trim(), amount=parseFloat(amountEl.value), date=dateEl.value||null;
+    if (!name)            { errorEl.textContent='Please enter a description.'; return; }
+    if (!amount||amount<=0) { errorEl.textContent='Please enter a valid amount.'; return; }
+    const res = await fetch('/expenses',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,amount,date,category_id:selectedCatId})});
+    if (res.ok) { nameEl.value=''; amountEl.value=''; dateEl.value=today(); catInput.value=''; selectedCatId=null; nameEl.focus(); await loadAll(); }
+    else { const d=await res.json(); errorEl.textContent=d.detail||'Something went wrong.'; }
   }
 
-  // ── Delete ──────────────────────────────────────────────────────
   async function deleteExpense(id) {
-    const item = document.getElementById('item-' + id);
-    if (item) item.style.opacity = '0.4';
-    await fetch('/expenses/' + id, { method: 'DELETE' });
+    const item=document.getElementById('item-'+id); if(item) item.style.opacity='0.4';
+    await fetch('/expenses/'+id,{method:'DELETE'});
     await loadAll();
   }
 
-  // ── Reset all ───────────────────────────────────────────────────
   function clearAll() {
-    document.getElementById('filter-cat').value   = '';
-    document.getElementById('filter-month').value = '';
-    document.getElementById('filter-from').value  = '';
-    document.getElementById('filter-to').value    = '';
-    setSort('date-desc');
-    setGroup('none');
+    document.getElementById('filter-cat').value=''; document.getElementById('filter-month').value='';
+    document.getElementById('filter-from').value=''; document.getElementById('filter-to').value='';
+    setSort('date-desc'); setGroup('none');
   }
 
-  // ── Keyboard nav ────────────────────────────────────────────────
-  document.getElementById('name').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('amount').focus(); });
-  document.getElementById('amount').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('date').focus(); });
-  document.getElementById('date').addEventListener('keydown', e => { if (e.key === 'Enter') catInput.focus(); });
+  document.getElementById('name').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('amount').focus(); });
+  document.getElementById('amount').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('date').focus(); });
+  document.getElementById('date').addEventListener('keydown', e => { if(e.key==='Enter') catInput.focus(); });
 
-  // ── Init ────────────────────────────────────────────────────────
   loadCategories();
   loadAll();
 </script>
