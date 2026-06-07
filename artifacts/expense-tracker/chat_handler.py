@@ -134,11 +134,16 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "get_budget",
-            "description": "Get the budget plan for a given month, including category allocations.",
+            "description": (
+                "Get the planned budget for a given month, including total budget, "
+                "per-category allocations, and actual spending vs. plan for each category. "
+                "Use this whenever the user asks about their budget plan, what they planned to spend, "
+                "how their spending compares to the plan, or budget status for any month."
+            ),
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "year_month": {"type": "string", "description": "Month in YYYY-MM format"},
+                    "year_month": {"type": "string", "description": "Month in YYYY-MM format. Default to current month if not specified."},
                 },
                 "required": ["year_month"],
             },
@@ -293,15 +298,64 @@ def _run_get_budget(args: dict) -> dict:
     with get_db() as conn:
         budget = conn.execute("SELECT * FROM budgets WHERE year_month=?", (ym,)).fetchone()
         if not budget:
-            return {"year_month": ym, "exists": False}
+            return {"year_month": ym, "exists": False, "message": f"No budget set for {ym}."}
         budget = dict(budget)
+
+        # Category allocations
         cats = conn.execute("""
-            SELECT c.name AS category, bc.amount
+            SELECT c.name AS category, bc.amount AS planned
             FROM budget_categories bc JOIN categories c ON bc.category_id=c.id
             WHERE bc.budget_id=? ORDER BY bc.amount DESC
         """, (budget["id"],)).fetchall()
-        budget["categories"] = [dict(r) for r in cats]
+
+        # Actual spending per category for this month
+        spent_rows = conn.execute("""
+            SELECT c.name AS category, COALESCE(SUM(e.amount),0) AS spent
+            FROM expenses e JOIN categories c ON e.category_id=c.id
+            WHERE e.date LIKE ?
+            GROUP BY c.id
+        """, (f"{ym}%",)).fetchall()
+        spent_map = {r["category"]: r["spent"] for r in spent_rows}
+
+        # Total actual spending for the month
+        total_spent = conn.execute(
+            "SELECT COALESCE(SUM(amount),0) AS t FROM expenses WHERE date LIKE ?",
+            (f"{ym}%",)
+        ).fetchone()["t"]
+
+        category_rows = []
+        for c in cats:
+            planned = c["planned"]
+            spent = spent_map.get(c["category"], 0)
+            remaining = planned - spent
+            pct = round((spent / planned * 100), 1) if planned > 0 else None
+            category_rows.append({
+                "category": c["category"],
+                "planned": planned,
+                "spent": spent,
+                "remaining": remaining,
+                "percent_used": pct,
+                "status": "over" if spent > planned else ("warning" if pct and pct >= 80 else "ok"),
+            })
+
+        total_planned = budget["total_amount"]
+        total_remaining = total_planned - total_spent
         budget["exists"] = True
+        budget["total_spent"] = total_spent
+        budget["total_remaining"] = total_remaining
+        budget["percent_used"] = round((total_spent / total_planned * 100), 1) if total_planned > 0 else 0
+        budget["categories"] = category_rows
+
+        # Categories with spending but no budget allocation
+        allocated_names = {c["category"] for c in cats}
+        unplanned = [
+            {"category": cat, "spent": amt}
+            for cat, amt in spent_map.items()
+            if cat not in allocated_names and amt > 0
+        ]
+        if unplanned:
+            budget["unplanned_spending"] = unplanned
+
     return budget
 
 
@@ -324,6 +378,7 @@ Today is {date.today().isoformat()}.
 You can:
 - Add one OR multiple expenses at once (always use add_expenses tool — never pretend to add without using it)
 - Analyze spending patterns and give insights
+- Show the planned budget and compare it to actual spending
 - Help set up monthly budgets and category allocations
 - Answer questions about past expenses
 
@@ -331,7 +386,14 @@ Guidelines:
 - Be concise and direct. Use bullet points or short lists when adding multiple items.
 - When the user mentions buying things or spending money, immediately use add_expenses.
 - When adding expenses, infer the category from context if not stated.
-- When the user asks "how am I doing this month?" or similar, call get_spending_summary first.
+- When the user asks "how am I doing this month?", "what's my budget?", "show my budget plan",
+  "budget status", or anything about their planned budget, ALWAYS call get_budget first.
+  It returns both the plan AND actual spending — use it to give a clear comparison.
+- When presenting budget results: show total (spent vs planned), then list each category with
+  planned amount, spent amount, and whether they're on track, at risk (≥80%), or over budget.
+  Flag unplanned spending (spending in categories with no budget allocation) separately.
+- When the user asks "how am I doing this month?" or similar without mentioning budget,
+  call get_spending_summary for a raw spending breakdown.
 - Format dollar amounts as $X.XX.
 - If a tool call modifies data (adds expenses, sets budget), briefly confirm what was done.
 - Never make up expense data — always use tools to read/write real data.
