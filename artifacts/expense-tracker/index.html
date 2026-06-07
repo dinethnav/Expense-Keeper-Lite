@@ -49,9 +49,9 @@
       align-items: flex-end;
       justify-content: space-between;
     }
-    .total-left .total-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.55; }
-    .total-left .total-amount { font-size: 2rem; font-weight: 700; letter-spacing: -1px; margin-top: 2px; }
-    .total-right { text-align: right; font-size: 0.78rem; opacity: 0.55; line-height: 1.6; }
+    .total-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.55; }
+    .total-amount { font-size: 2rem; font-weight: 700; letter-spacing: -1px; margin-top: 2px; }
+    .total-sub { text-align: right; font-size: 0.78rem; opacity: 0.55; line-height: 1.6; white-space: pre-line; }
 
     /* ── Card ────────────────────────────────────────────────── */
     .card {
@@ -61,19 +61,10 @@
       margin-bottom: 14px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.07);
     }
-    .card-title {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #666;
-      margin-bottom: 12px;
-    }
+    .card-title { font-size: 0.85rem; font-weight: 600; color: #666; margin-bottom: 12px; }
 
-    /* ── Form ────────────────────────────────────────────────── */
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 110px;
-      gap: 8px;
-    }
+    /* ── Add form ────────────────────────────────────────────── */
+    .form-grid { display: grid; grid-template-columns: 1fr 110px; gap: 8px; }
     .form-grid .full { grid-column: 1 / -1; }
     .field-label { display: block; font-size: 0.7rem; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
     input[type="text"], input[type="number"], input[type="date"] {
@@ -100,7 +91,7 @@
       box-shadow: 0 6px 20px rgba(0,0,0,0.1);
       max-height: 180px;
       overflow-y: auto;
-      z-index: 200;
+      z-index: 300;
       display: none;
     }
     .dropdown.open { display: block; }
@@ -119,91 +110,15 @@
     .btn-primary:active { transform: scale(0.98); }
     .error-msg { color: #e53935; font-size: 0.79rem; margin-top: 7px; min-height: 15px; }
 
-    /* ── Sort / Filter / Group controls ─────────────────────── */
-    .controls-card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-bottom: 14px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-    }
-    .controls-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .controls-row + .controls-row { margin-top: 10px; padding-top: 10px; border-top: 1px solid #f2f2f2; }
-
-    .ctrl-group { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 120px; }
-    .ctrl-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: #bbb; }
-
-    select.ctrl-select {
-      border: 1.5px solid #e4e4e4;
-      border-radius: 7px;
-      padding: 6px 10px;
-      font-size: 0.85rem;
-      background: #fafafa;
-      color: #1a1a2e;
-      outline: none;
-      cursor: pointer;
-      transition: border-color 0.15s;
-      width: 100%;
-    }
-    select.ctrl-select:focus { border-color: #5b6af5; background: #fff; }
-    select.ctrl-select.active { border-color: #5b6af5; background: #eef0ff; color: #5b6af5; font-weight: 600; }
-
-    input.ctrl-date {
-      border: 1.5px solid #e4e4e4;
-      border-radius: 7px;
-      padding: 6px 10px;
-      font-size: 0.85rem;
-      background: #fafafa;
-      color: #1a1a2e;
-      outline: none;
-      transition: border-color 0.15s;
-      width: 100%;
-    }
-    input.ctrl-date:focus { border-color: #5b6af5; background: #fff; }
-    input.ctrl-date.active { border-color: #5b6af5; background: #eef0ff; }
-
-    .clear-btn {
-      border: 1.5px solid #e4e4e4;
-      border-radius: 7px;
-      padding: 6px 12px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #999;
-      background: none;
-      cursor: pointer;
-      transition: color 0.15s, border-color 0.15s, background 0.15s;
-      white-space: nowrap;
-      align-self: flex-end;
-    }
-    .clear-btn:hover { color: #e53935; border-color: #e53935; background: #fdecea; }
-    .clear-btn.has-filters { color: #5b6af5; border-color: #5b6af5; }
-
-    .active-badge {
-      display: inline-block;
-      background: #5b6af5;
-      color: #fff;
-      border-radius: 10px;
-      font-size: 0.68rem;
-      font-weight: 700;
-      padding: 1px 6px;
-      margin-left: 4px;
-      vertical-align: middle;
-    }
-
-    /* ── Expense list ────────────────────────────────────────── */
+    /* ── List header + popup trigger ────────────────────────── */
     .list-card {
       background: #fff;
       border-radius: 14px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-      overflow: hidden;
+      overflow: visible; /* allow popup to overflow */
     }
     .list-header {
-      padding: 13px 20px 11px;
+      padding: 12px 16px 12px 20px;
       font-size: 0.88rem;
       font-weight: 600;
       color: #666;
@@ -211,24 +126,169 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      position: relative;
     }
+    .list-header-left { display: flex; align-items: center; gap: 10px; }
     .list-count { font-size: 0.78rem; color: #bbb; font-weight: 500; }
 
-    .expense-list { list-style: none; }
+    /* Popup trigger button */
+    .filter-trigger {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1.5px solid #e4e4e4;
+      background: #fafafa;
+      color: #666;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .filter-trigger:hover { border-color: #5b6af5; color: #5b6af5; background: #f0f1ff; }
+    .filter-trigger.active {
+      border-color: #5b6af5;
+      background: #5b6af5;
+      color: #fff;
+    }
+    .filter-trigger svg { flex-shrink: 0; }
+    .filter-badge {
+      background: #fff;
+      color: #5b6af5;
+      border-radius: 10px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 0px 5px;
+      line-height: 16px;
+      display: none;
+    }
+    .filter-trigger.active .filter-badge { display: inline-block; }
 
-    /* Group header */
+    /* ── Popup panel ─────────────────────────────────────────── */
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 199;
+    }
+    .popup-overlay.open { display: block; }
+
+    .popup-panel {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      width: 340px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08);
+      border: 1px solid #eee;
+      z-index: 200;
+      overflow: hidden;
+      transform-origin: top right;
+      animation: popIn 0.16s ease;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+      to   { opacity: 1; transform: scale(1)    translateY(0); }
+    }
+
+    .popup-section {
+      padding: 14px 16px;
+      border-bottom: 1px solid #f2f2f2;
+    }
+    .popup-section:last-child { border-bottom: none; }
+    .popup-section-title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #bbb;
+      margin-bottom: 8px;
+    }
+
+    /* Segmented control for sort/group */
+    .seg-group { display: flex; gap: 4px; flex-wrap: wrap; }
+    .seg-btn {
+      flex: 1;
+      min-width: fit-content;
+      padding: 6px 10px;
+      border-radius: 7px;
+      border: 1.5px solid #e8e8e8;
+      background: #fafafa;
+      color: #666;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.12s;
+      white-space: nowrap;
+    }
+    .seg-btn:hover { border-color: #c0c4ff; background: #f0f1ff; color: #5b6af5; }
+    .seg-btn.selected {
+      border-color: #5b6af5;
+      background: #5b6af5;
+      color: #fff;
+    }
+
+    /* Filter inputs inside popup */
+    .popup-filter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .popup-field { display: flex; flex-direction: column; gap: 4px; }
+    .popup-field label { font-size: 0.7rem; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
+    select.popup-select, input.popup-input {
+      border: 1.5px solid #e4e4e4;
+      border-radius: 7px;
+      padding: 7px 10px;
+      font-size: 0.84rem;
+      background: #fafafa;
+      color: #1a1a2e;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    select.popup-select:focus, input.popup-input:focus { border-color: #5b6af5; background: #fff; }
+    select.popup-select.has-value, input.popup-input.has-value {
+      border-color: #5b6af5;
+      background: #eef0ff;
+      color: #3a49c5;
+      font-weight: 600;
+    }
+
+    /* Footer */
+    .popup-footer {
+      padding: 10px 16px;
+      background: #f8f9ff;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .clear-btn {
+      padding: 6px 14px;
+      border-radius: 7px;
+      border: 1.5px solid #e4e4e4;
+      background: none;
+      color: #999;
+      font-size: 0.81rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .clear-btn:hover { color: #e53935; border-color: #e53935; background: #fdecea; }
+    .clear-btn.has-active { color: #5b6af5; border-color: #5b6af5; }
+
+    /* ── Expense list ────────────────────────────────────────── */
+    .expense-list { list-style: none; overflow: hidden; border-radius: 0 0 14px 14px; }
     .group-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 20px;
+      padding: 7px 20px;
       background: #f7f8fc;
       border-bottom: 1px solid #ebebeb;
       border-top: 1px solid #ebebeb;
     }
-    .group-header:first-child { border-top: none; }
-    .group-name { font-size: 0.8rem; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
-    .group-total { font-size: 0.8rem; font-weight: 700; color: #5b6af5; }
+    .group-name { font-size: 0.78rem; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+    .group-total { font-size: 0.78rem; font-weight: 700; color: #5b6af5; }
 
     .expense-item {
       display: flex;
@@ -242,7 +302,6 @@
     @keyframes slideIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
     .expense-item:last-child { border-bottom: none; }
     .expense-item:hover { background: #fafafa; }
-
     .expense-info { flex: 1; min-width: 0; }
     .expense-name { font-size: 0.9rem; font-weight: 500; color: #1a1a2e; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .expense-meta { font-size: 0.74rem; color: #bbb; margin-top: 2px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
@@ -269,11 +328,11 @@
 
   <!-- Total -->
   <div class="total-card">
-    <div class="total-left">
+    <div>
       <div class="total-label">Total Spending</div>
       <div class="total-amount" id="total">$0.00</div>
     </div>
-    <div class="total-right" id="total-sub"></div>
+    <div class="total-sub" id="total-sub"></div>
   </div>
 
   <!-- Add Expense -->
@@ -304,87 +363,146 @@
     <button class="btn-primary" onclick="addExpense()">Add Expense</button>
   </div>
 
-  <!-- Sort / Filter / Group -->
-  <div class="controls-card" id="controls-card">
-    <div class="controls-row">
-      <div class="ctrl-group">
-        <span class="ctrl-label">Sort by</span>
-        <select class="ctrl-select" id="sort-select" onchange="applyAndRender()">
-          <option value="date-desc">Date — Newest</option>
-          <option value="date-asc">Date — Oldest</option>
-          <option value="amount-desc">Amount — High to Low</option>
-          <option value="amount-asc">Amount — Low to High</option>
-        </select>
-      </div>
-      <div class="ctrl-group">
-        <span class="ctrl-label">Group by</span>
-        <select class="ctrl-select" id="group-select" onchange="applyAndRender()">
-          <option value="none">No grouping</option>
-          <option value="month">Month</option>
-          <option value="category">Category</option>
-        </select>
-      </div>
-      <button class="clear-btn" id="clear-btn" onclick="clearAll()">Clear all</button>
-    </div>
-
-    <div class="controls-row">
-      <div class="ctrl-group">
-        <span class="ctrl-label">Category</span>
-        <select class="ctrl-select" id="filter-cat" onchange="applyAndRender()">
-          <option value="">All categories</option>
-        </select>
-      </div>
-      <div class="ctrl-group">
-        <span class="ctrl-label">Month</span>
-        <select class="ctrl-select" id="filter-month" onchange="applyAndRender()">
-          <option value="">All months</option>
-        </select>
-      </div>
-      <div class="ctrl-group">
-        <span class="ctrl-label">From</span>
-        <input type="date" class="ctrl-date" id="filter-from" oninput="applyAndRender()" />
-      </div>
-      <div class="ctrl-group">
-        <span class="ctrl-label">To</span>
-        <input type="date" class="ctrl-date" id="filter-to" oninput="applyAndRender()" />
-      </div>
-    </div>
-  </div>
-
-  <!-- List -->
+  <!-- Expense List with popup controls -->
   <div class="list-card">
     <div class="list-header">
-      <span>Expenses</span>
-      <span class="list-count" id="list-count"></span>
-    </div>
+      <div class="list-header-left">
+        <span>Expenses</span>
+        <span class="list-count" id="list-count"></span>
+      </div>
+
+      <!-- Trigger button -->
+      <div style="position:relative;">
+        <button class="filter-trigger" id="filter-trigger" onclick="togglePopup(event)">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+            <path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Sort &amp; Filter
+          <span class="filter-badge" id="filter-badge">0</span>
+        </button>
+
+        <!-- Overlay (closes popup on outside click) -->
+        <div class="popup-overlay" id="popup-overlay" onclick="closePopup()"></div>
+
+        <!-- Popup panel -->
+        <div class="popup-panel" id="popup-panel" style="display:none;">
+
+          <!-- Sort -->
+          <div class="popup-section">
+            <div class="popup-section-title">Sort by</div>
+            <div class="seg-group" id="sort-group">
+              <button class="seg-btn selected" data-value="date-desc"  onclick="setSort('date-desc')">Newest</button>
+              <button class="seg-btn"           data-value="date-asc"   onclick="setSort('date-asc')">Oldest</button>
+              <button class="seg-btn"           data-value="amount-desc" onclick="setSort('amount-desc')">$ High–Low</button>
+              <button class="seg-btn"           data-value="amount-asc"  onclick="setSort('amount-asc')">$ Low–High</button>
+            </div>
+          </div>
+
+          <!-- Group -->
+          <div class="popup-section">
+            <div class="popup-section-title">Group by</div>
+            <div class="seg-group" id="group-group">
+              <button class="seg-btn selected" data-value="none"     onclick="setGroup('none')">None</button>
+              <button class="seg-btn"           data-value="month"    onclick="setGroup('month')">Month</button>
+              <button class="seg-btn"           data-value="category" onclick="setGroup('category')">Category</button>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="popup-section">
+            <div class="popup-section-title">Filter</div>
+            <div class="popup-filter-grid">
+              <div class="popup-field">
+                <label>Category</label>
+                <select class="popup-select" id="filter-cat" onchange="applyAndRender()">
+                  <option value="">All</option>
+                </select>
+              </div>
+              <div class="popup-field">
+                <label>Month</label>
+                <select class="popup-select" id="filter-month" onchange="applyAndRender()">
+                  <option value="">All</option>
+                </select>
+              </div>
+              <div class="popup-field">
+                <label>From date</label>
+                <input type="date" class="popup-input" id="filter-from" oninput="applyAndRender()" />
+              </div>
+              <div class="popup-field">
+                <label>To date</label>
+                <input type="date" class="popup-input" id="filter-to" oninput="applyAndRender()" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="popup-footer">
+            <button class="clear-btn" id="clear-btn" onclick="clearAll()">Reset all</button>
+          </div>
+
+        </div><!-- /popup-panel -->
+      </div>
+    </div><!-- /list-header -->
+
     <ul class="expense-list" id="list"></ul>
   </div>
 
-</div>
+</div><!-- /page -->
 
 <script>
-  const fmt    = n => '$' + Number(n).toFixed(2);
-  const esc    = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const today  = () => new Date().toLocaleDateString('en-CA');
+  const fmt  = n => '$' + Number(n).toFixed(2);
+  const esc  = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const today = () => new Date().toLocaleDateString('en-CA');
 
   document.getElementById('date').value = today();
 
   // ── State ──────────────────────────────────────────────────────
-  let allExpenses  = [];
+  let allExpenses   = [];
   let allCategories = [];
   let selectedCatId = null;
+  let sortMode  = 'date-desc';
+  let groupMode = 'none';
 
-  // ── Searchable category input ───────────────────────────────────
+  // ── Popup ──────────────────────────────────────────────────────
+  function togglePopup(e) {
+    e.stopPropagation();
+    const panel   = document.getElementById('popup-panel');
+    const overlay = document.getElementById('popup-overlay');
+    const isOpen  = panel.style.display === 'block';
+    panel.style.display   = isOpen ? 'none' : 'block';
+    overlay.classList.toggle('open', !isOpen);
+    document.getElementById('filter-trigger').classList.toggle('active', !isOpen);
+  }
+  function closePopup() {
+    document.getElementById('popup-panel').style.display = 'none';
+    document.getElementById('popup-overlay').classList.remove('open');
+    // keep trigger active if filters are set
+    updateTriggerState();
+  }
+
+  // ── Sort / Group segment controls ──────────────────────────────
+  function setSort(val) {
+    sortMode = val;
+    document.querySelectorAll('#sort-group .seg-btn').forEach(b => b.classList.toggle('selected', b.dataset.value === val));
+    applyAndRender();
+  }
+  function setGroup(val) {
+    groupMode = val;
+    document.querySelectorAll('#group-group .seg-btn').forEach(b => b.classList.toggle('selected', b.dataset.value === val));
+    applyAndRender();
+  }
+
+  // ── Category searchable input ───────────────────────────────────
   const catInput    = document.getElementById('cat-input');
   const catDropdown = document.getElementById('cat-dropdown');
 
   async function loadCategories() {
     allCategories = await fetch('/categories').then(r => r.json());
     populateCategoryFilter();
-    renderDropdown('');
+    renderCatDropdown('');
   }
 
-  function renderDropdown(q) {
+  function renderCatDropdown(q) {
     const filtered = q
       ? allCategories.filter(c => c.name.toLowerCase().includes(q.toLowerCase()))
       : allCategories;
@@ -401,16 +519,18 @@
     });
   }
 
-  catInput.addEventListener('focus', () => { renderDropdown(catInput.value); catDropdown.classList.add('open'); });
-  catInput.addEventListener('input', () => { selectedCatId = null; renderDropdown(catInput.value); catDropdown.classList.add('open'); });
+  catInput.addEventListener('focus', () => { renderCatDropdown(catInput.value); catDropdown.classList.add('open'); });
+  catInput.addEventListener('input', () => { selectedCatId = null; renderCatDropdown(catInput.value); catDropdown.classList.add('open'); });
   catInput.addEventListener('blur', () => setTimeout(() => catDropdown.classList.remove('open'), 150));
-  document.addEventListener('click', e => { if (!document.getElementById('cat-wrap').contains(e.target)) catDropdown.classList.remove('open'); });
+  document.addEventListener('click', e => {
+    if (!document.getElementById('cat-wrap').contains(e.target)) catDropdown.classList.remove('open');
+  });
 
-  // ── Filter dropdowns ────────────────────────────────────────────
+  // ── Filter helpers ──────────────────────────────────────────────
   function populateCategoryFilter() {
     const sel = document.getElementById('filter-cat');
     const cur = sel.value;
-    sel.innerHTML = '<option value="">All categories</option>' +
+    sel.innerHTML = '<option value="">All</option>' +
       allCategories.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
     sel.value = cur;
   }
@@ -418,10 +538,8 @@
   function populateMonthFilter(expenses) {
     const sel = document.getElementById('filter-month');
     const cur = sel.value;
-    const months = [...new Set(
-      expenses.filter(e => e.date).map(e => e.date.slice(0,7))
-    )].sort().reverse();
-    sel.innerHTML = '<option value="">All months</option>' +
+    const months = [...new Set(expenses.filter(e => e.date).map(e => e.date.slice(0,7)))].sort().reverse();
+    sel.innerHTML = '<option value="">All</option>' +
       months.map(m => `<option value="${m}">${fmtMonth(m)}</option>`).join('');
     sel.value = months.includes(cur) ? cur : '';
   }
@@ -431,14 +549,43 @@
     const [y, m] = ym.split('-');
     return new Date(+y, +m - 1, 1).toLocaleString('default', { month: 'long', year: 'numeric' });
   }
-
   function fmtDate(str) {
     if (!str) return '';
     const [y, m, d] = str.split('-');
     return `${d}/${m}/${y}`;
   }
 
-  // ── Load & process ──────────────────────────────────────────────
+  // ── Count active controls ───────────────────────────────────────
+  function activeCount() {
+    let n = 0;
+    if (document.getElementById('filter-cat').value)   n++;
+    if (document.getElementById('filter-month').value) n++;
+    if (document.getElementById('filter-from').value)  n++;
+    if (document.getElementById('filter-to').value)    n++;
+    if (sortMode  !== 'date-desc') n++;
+    if (groupMode !== 'none')      n++;
+    return n;
+  }
+
+  function updateTriggerState() {
+    const n = activeCount();
+    const trigger = document.getElementById('filter-trigger');
+    const badge   = document.getElementById('filter-badge');
+    const clearBtn = document.getElementById('clear-btn');
+    // Keep trigger highlighted if popup is closed but controls are active
+    const panelOpen = document.getElementById('popup-panel').style.display === 'block';
+    trigger.classList.toggle('active', panelOpen || n > 0);
+    badge.textContent = n;
+    badge.style.display = n > 0 ? 'inline-block' : 'none';
+    clearBtn.classList.toggle('has-active', n > 0);
+    // Highlight active filter inputs
+    ['filter-cat','filter-month','filter-from','filter-to'].forEach(id => {
+      const el = document.getElementById(id);
+      el.classList.toggle('has-value', !!el.value);
+    });
+  }
+
+  // ── Main pipeline ───────────────────────────────────────────────
   async function loadAll() {
     allExpenses = await fetch('/expenses').then(r => r.json());
     populateMonthFilter(allExpenses);
@@ -448,7 +595,6 @@
   function applyAndRender() {
     let expenses = [...allExpenses];
 
-    // Filters
     const catFilter   = document.getElementById('filter-cat').value;
     const monthFilter = document.getElementById('filter-month').value;
     const fromFilter  = document.getElementById('filter-from').value;
@@ -460,7 +606,6 @@
     if (toFilter)    expenses = expenses.filter(e => e.date && e.date <= toFilter);
 
     // Sort
-    const sortMode = document.getElementById('sort-select').value;
     expenses.sort((a, b) => {
       if (sortMode === 'date-desc')   return (b.date||'0').localeCompare(a.date||'0');
       if (sortMode === 'date-asc')    return (a.date||'0').localeCompare(b.date||'0');
@@ -469,40 +614,24 @@
       return 0;
     });
 
-    // Total of filtered set
-    const filteredTotal = expenses.reduce((s, e) => s + e.amount, 0);
-    const grandTotal    = allExpenses.reduce((s, e) => s + e.amount, 0);
+    // Totals
+    const filteredTotal = expenses.reduce((s,e) => s + e.amount, 0);
+    const grandTotal    = allExpenses.reduce((s,e) => s + e.amount, 0);
     document.getElementById('total').textContent = fmt(filteredTotal);
     const isFiltered = expenses.length !== allExpenses.length;
     document.getElementById('total-sub').textContent = isFiltered
       ? `${expenses.length} of ${allExpenses.length} expenses\nAll time: ${fmt(grandTotal)}`
       : `${allExpenses.length} expense${allExpenses.length !== 1 ? 's' : ''}`;
-
-    // Count badge
     document.getElementById('list-count').textContent =
-      expenses.length === allExpenses.length
-        ? `${expenses.length} total`
-        : `${expenses.length} shown`;
+      isFiltered ? `${expenses.length} shown` : `${allExpenses.length} total`;
 
-    // Update clear button style
-    const hasFilters = catFilter || monthFilter || fromFilter || toFilter;
-    const clearBtn = document.getElementById('clear-btn');
-    clearBtn.classList.toggle('has-filters', !!hasFilters);
+    updateTriggerState();
 
-    // Highlight active selects
-    document.getElementById('filter-cat').classList.toggle('active', !!catFilter);
-    document.getElementById('filter-month').classList.toggle('active', !!monthFilter);
-    document.getElementById('filter-from').classList.toggle('active', !!fromFilter);
-    document.getElementById('filter-to').classList.toggle('active', !!toFilter);
-    document.getElementById('group-select').classList.toggle('active', document.getElementById('group-select').value !== 'none');
-    document.getElementById('sort-select').classList.toggle('active', sortMode !== 'date-desc');
-
-    // Group
-    const groupMode = document.getElementById('group-select').value;
+    // Render
     if (groupMode === 'month') {
-      renderGrouped(expenses, e => e.date ? fmtMonth(e.date.slice(0,7)) : 'No date', e => e.date ? e.date.slice(0,7) : '');
+      renderGrouped(expenses, e => e.date ? fmtMonth(e.date.slice(0,7)) : 'No date', e => e.date ? e.date.slice(0,7) : '\x00');
     } else if (groupMode === 'category') {
-      renderGrouped(expenses, e => e.category_name || 'Uncategorised', e => e.category_name || '');
+      renderGrouped(expenses, e => e.category_name || 'Uncategorised', e => e.category_name || '\x00');
     } else {
       renderFlat(expenses);
     }
@@ -510,36 +639,25 @@
 
   function renderFlat(expenses) {
     const list = document.getElementById('list');
-    if (!expenses.length) {
-      list.innerHTML = '<li class="empty-state">No expenses match the current filters.</li>';
-      return;
-    }
-    list.innerHTML = expenses.map(itemHtml).join('');
+    list.innerHTML = expenses.length
+      ? expenses.map(itemHtml).join('')
+      : '<li class="empty-state">No expenses match the current filters.</li>';
   }
 
   function renderGrouped(expenses, labelFn, keyFn) {
     const list = document.getElementById('list');
-    if (!expenses.length) {
-      list.innerHTML = '<li class="empty-state">No expenses match the current filters.</li>';
-      return;
-    }
-    // Build ordered groups preserving current sort
+    if (!expenses.length) { list.innerHTML = '<li class="empty-state">No expenses match the current filters.</li>'; return; }
     const groups = [];
-    const groupMap = {};
+    const map = {};
     expenses.forEach(e => {
-      const key = keyFn(e);
-      const lbl = labelFn(e);
-      if (!groupMap[key]) {
-        groupMap[key] = { label: lbl, items: [], total: 0 };
-        groups.push(groupMap[key]);
-      }
-      groupMap[key].items.push(e);
-      groupMap[key].total += e.amount;
+      const key = keyFn(e), lbl = labelFn(e);
+      if (!map[key]) { map[key] = { label: lbl, items: [], total: 0 }; groups.push(map[key]); }
+      map[key].items.push(e);
+      map[key].total += e.amount;
     });
-
     list.innerHTML = groups.map(g => `
       <li class="group-header">
-        <span class="group-name">${esc(g.label || 'No date')}</span>
+        <span class="group-name">${esc(g.label)}</span>
         <span class="group-total">${fmt(g.total)}</span>
       </li>
       ${g.items.map(itemHtml).join('')}
@@ -567,20 +685,16 @@
     const dateEl   = document.getElementById('date');
     const errorEl  = document.getElementById('error');
     errorEl.textContent = '';
-
     const name   = nameEl.value.trim();
     const amount = parseFloat(amountEl.value);
     const date   = dateEl.value || null;
-
-    if (!name)          { errorEl.textContent = 'Please enter a description.'; return; }
+    if (!name)           { errorEl.textContent = 'Please enter a description.'; return; }
     if (!amount || amount <= 0) { errorEl.textContent = 'Please enter a valid amount.'; return; }
-
     const res = await fetch('/expenses', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, amount, date, category_id: selectedCatId })
     });
-
     if (res.ok) {
       nameEl.value = ''; amountEl.value = ''; dateEl.value = today();
       catInput.value = ''; selectedCatId = null;
@@ -600,15 +714,14 @@
     await loadAll();
   }
 
-  // ── Clear all filters ───────────────────────────────────────────
+  // ── Reset all ───────────────────────────────────────────────────
   function clearAll() {
     document.getElementById('filter-cat').value   = '';
     document.getElementById('filter-month').value = '';
     document.getElementById('filter-from').value  = '';
     document.getElementById('filter-to').value    = '';
-    document.getElementById('sort-select').value  = 'date-desc';
-    document.getElementById('group-select').value = 'none';
-    applyAndRender();
+    setSort('date-desc');
+    setGroup('none');
   }
 
   // ── Keyboard nav ────────────────────────────────────────────────
