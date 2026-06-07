@@ -350,7 +350,7 @@ def stream_chat(messages: list) -> "generator":
 
     while True:
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4.1-nano",
             messages=full_messages,
             tools=TOOLS,
             tool_choice="auto",
