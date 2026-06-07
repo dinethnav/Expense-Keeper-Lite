@@ -79,15 +79,19 @@
     /* ── Category allocations ───────────────────────────────────── */
     .cat-list { list-style: none; }
     .cat-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 0; border-bottom: 1px solid #f4f4f4;
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 0; border-bottom: 1px solid #f4f4f4;
     }
     .cat-row:last-child { border-bottom: none; }
-    .cat-row-info { flex: 1; min-width: 0; }
-    .cat-row-name { font-size: 0.88rem; font-weight: 500; color: #1a1a2e; }
+    .cat-row-info { flex: 1; min-width: 0; padding-top: 2px; }
+    .cat-row-name {
+      font-size: 0.88rem; font-weight: 500; color: #1a1a2e;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      line-height: 1.6;
+    }
 
     /* Progress bar */
-    .cat-progress { margin-top: 5px; }
+    .cat-progress { margin-top: 6px; }
     .cat-bar-track { background: #f0f0f0; border-radius: 99px; height: 4px; overflow: hidden; }
     .cat-bar-fill  { height: 100%; border-radius: 99px; background: #5b6af5; transition: width 0.3s ease; }
     .cat-bar-fill.warn { background: #fbbf24; }
@@ -95,14 +99,28 @@
     .cat-bar-labels { display: flex; justify-content: space-between; margin-top: 3px; }
     .cat-bar-spent { font-size: 0.7rem; color: #aaa; }
     .cat-bar-budgeted { font-size: 0.7rem; color: #aaa; }
+    .cat-spent-note { font-size: 0.72rem; color: #bbb; margin-top: 4px; }
 
-    .cat-amount-input { width: 90px; border: 1.5px solid #e4e4e4; border-radius: 7px; padding: 6px 8px; font-size: 0.85rem; outline: none; background: #fafafa; color: #1a1a2e; text-align: right; transition: border-color 0.15s; }
+    .cat-amount-input {
+      width: 90px; border: 1.5px solid #e4e4e4; border-radius: 7px;
+      padding: 5px 8px; font-size: 0.85rem; outline: none;
+      background: #fafafa; color: #1a1a2e; text-align: right;
+      transition: border-color 0.15s; flex-shrink: 0;
+    }
     .cat-amount-input:focus { border-color: #5b6af5; background: #fff; }
     .cat-amount-input.allocated { border-color: #5b6af5; background: #eef0ff; color: #3a49c5; font-weight: 600; }
 
-    .cat-save-btn { padding: 5px 10px; background: #5b6af5; color: #fff; border: none; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+    .cat-save-btn {
+      padding: 5px 12px; background: #5b6af5; color: #fff;
+      border: none; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s; white-space: nowrap; flex-shrink: 0;
+    }
     .cat-save-btn:hover { background: #4a57e0; }
-    .cat-clear-btn { padding: 5px 8px; background: none; color: #ccc; border: 1.5px solid #e8e8e8; border-radius: 6px; font-size: 0.78rem; cursor: pointer; transition: color 0.15s, border-color 0.15s; }
+    .cat-clear-btn {
+      padding: 5px 8px; background: none; color: #ccc;
+      border: 1.5px solid #e8e8e8; border-radius: 6px; font-size: 0.78rem;
+      cursor: pointer; transition: color 0.15s, border-color 0.15s; flex-shrink: 0;
+    }
     .cat-clear-btn:hover { color: #e53935; border-color: #e53935; }
 
     .allocated-total { display: flex; justify-content: space-between; padding: 10px 0 0; font-size: 0.82rem; color: #888; }
@@ -292,7 +310,7 @@
             <span class="cat-bar-spent">${fmt(spent)} spent</span>
             <span class="cat-bar-budgeted">of ${fmt(budgeted)}</span>
           </div>
-        </div>` : (spent > 0 ? `<div style="font-size:0.72rem;color:#aaa;margin-top:3px;">${fmt(spent)} spent (no budget set)</div>` : '');
+        </div>` : (spent > 0 ? `<div class="cat-spent-note">${fmt(spent)} spent · no budget set</div>` : '');
 
       return `
         <li class="cat-row">
