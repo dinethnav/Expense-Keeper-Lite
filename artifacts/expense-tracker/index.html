@@ -11,23 +11,41 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #f0f2f5;
       min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* Nav */
+    nav {
+      background: #1a1a2e;
       display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 40px 16px 60px;
+      align-items: center;
+      padding: 0 24px;
+      height: 52px;
+      gap: 4px;
     }
-
-    .container {
-      width: 100%;
-      max-width: 480px;
-    }
-
-    h1 {
-      font-size: 1.6rem;
+    .nav-brand {
       font-weight: 700;
-      color: #1a1a2e;
-      margin-bottom: 24px;
-      letter-spacing: -0.5px;
+      color: #fff;
+      font-size: 1rem;
+      margin-right: 24px;
+      letter-spacing: -0.3px;
+    }
+    nav a {
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+    nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    nav a.active { color: #fff; background: rgba(255,255,255,0.12); }
+
+    .page {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 32px 16px 0;
     }
 
     /* Total card */
@@ -37,79 +55,124 @@
       border-radius: 14px;
       padding: 22px 24px;
       margin-bottom: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
     }
     .total-label {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 1px;
-      opacity: 0.6;
+      opacity: 0.55;
     }
     .total-amount {
       font-size: 2.2rem;
       font-weight: 700;
       letter-spacing: -1px;
+      margin-top: 4px;
     }
 
-    /* Add form */
-    .form-card {
+    /* Card */
+    .card {
       background: #fff;
       border-radius: 14px;
       padding: 20px;
       margin-bottom: 20px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.07);
     }
-    .form-card h2 {
-      font-size: 0.95rem;
+    .card h2 {
+      font-size: 0.92rem;
       font-weight: 600;
-      color: #444;
+      color: #555;
       margin-bottom: 14px;
     }
-    .form-row {
-      display: flex;
+
+    /* Form grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 110px;
       gap: 10px;
     }
+    .form-grid .full { grid-column: 1 / -1; }
+
+    label.field-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 5px;
+    }
+
     input[type="text"],
-    input[type="number"] {
-      border: 1.5px solid #e0e0e0;
+    input[type="number"],
+    input[type="date"] {
+      width: 100%;
+      border: 1.5px solid #e4e4e4;
       border-radius: 8px;
-      padding: 10px 12px;
-      font-size: 0.95rem;
+      padding: 9px 12px;
+      font-size: 0.93rem;
       outline: none;
-      transition: border-color 0.15s;
       background: #fafafa;
       color: #1a1a2e;
+      transition: border-color 0.15s, background 0.15s;
     }
-    input[type="text"] { flex: 1; }
-    input[type="number"] { width: 110px; }
-    input[type="text"]:focus,
-    input[type="number"]:focus { border-color: #5b6af5; background: #fff; }
+    input:focus { border-color: #5b6af5; background: #fff; }
 
-    button.add-btn {
+    /* Custom searchable select */
+    .select-wrap { position: relative; }
+    .select-wrap input { cursor: pointer; }
+    .dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: #fff;
+      border: 1.5px solid #e4e4e4;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 100;
+      display: none;
+    }
+    .dropdown.open { display: block; }
+    .dropdown-item {
+      padding: 9px 14px;
+      font-size: 0.91rem;
+      cursor: pointer;
+      color: #1a1a2e;
+      transition: background 0.1s;
+    }
+    .dropdown-item:hover, .dropdown-item.highlighted { background: #f0f1ff; }
+    .dropdown-empty {
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      color: #aaa;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      width: 100%;
+      margin-top: 14px;
       background: #5b6af5;
       color: #fff;
       border: none;
       border-radius: 8px;
-      padding: 10px 18px;
+      padding: 11px 18px;
       font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       transition: background 0.15s, transform 0.1s;
-      white-space: nowrap;
     }
-    button.add-btn:hover { background: #4a57e0; }
-    button.add-btn:active { transform: scale(0.97); }
+    .btn-primary:hover { background: #4a57e0; }
+    .btn-primary:active { transform: scale(0.98); }
 
     .error-msg {
       color: #e53935;
-      font-size: 0.82rem;
+      font-size: 0.81rem;
       margin-top: 8px;
-      min-height: 18px;
+      min-height: 16px;
     }
 
-    /* List */
+    /* Expense list */
     .list-card {
       background: #fff;
       border-radius: 14px;
@@ -117,166 +180,293 @@
       overflow: hidden;
     }
     .list-header {
-      padding: 16px 20px 12px;
-      font-size: 0.95rem;
+      padding: 15px 20px 12px;
+      font-size: 0.92rem;
       font-weight: 600;
-      color: #444;
-      border-bottom: 1px solid #f0f0f0;
+      color: #555;
+      border-bottom: 1px solid #f2f2f2;
     }
     .expense-list { list-style: none; }
     .expense-item {
       display: flex;
       align-items: center;
-      padding: 14px 20px;
+      padding: 13px 20px;
       border-bottom: 1px solid #f4f4f4;
-      gap: 12px;
-      transition: background 0.1s;
-      animation: slideIn 0.2s ease;
+      gap: 10px;
+      animation: slideIn 0.18s ease;
     }
     @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-6px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(-5px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     .expense-item:last-child { border-bottom: none; }
     .expense-item:hover { background: #fafafa; }
+
+    .expense-info { flex: 1; min-width: 0; }
     .expense-name {
-      flex: 1;
-      font-size: 0.95rem;
-      color: #1a1a2e;
+      font-size: 0.93rem;
       font-weight: 500;
+      color: #1a1a2e;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .expense-amount {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: #333;
+    .expense-meta {
+      font-size: 0.77rem;
+      color: #aaa;
+      margin-top: 2px;
+      display: flex;
+      gap: 8px;
     }
-    button.del-btn {
+    .expense-cat {
+      background: #eef0ff;
+      color: #5b6af5;
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .expense-amount {
+      font-size: 0.93rem;
+      font-weight: 600;
+      color: #222;
+      flex-shrink: 0;
+    }
+    .del-btn {
       background: none;
       border: none;
       cursor: pointer;
-      color: #bbb;
-      font-size: 1.1rem;
-      line-height: 1;
-      padding: 4px;
+      color: #ccc;
+      font-size: 1rem;
+      padding: 4px 6px;
       border-radius: 6px;
       transition: color 0.15s, background 0.15s;
       flex-shrink: 0;
     }
-    button.del-btn:hover { color: #e53935; background: #fdecea; }
+    .del-btn:hover { color: #e53935; background: #fdecea; }
 
     .empty-state {
       padding: 32px 20px;
       text-align: center;
       color: #bbb;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Expense Tracker</h1>
 
-    <div class="total-card">
-      <span class="total-label">Total Spending</span>
-      <span class="total-amount" id="total">$0.00</span>
-    </div>
+<nav>
+  <span class="nav-brand">💰 Expenses</span>
+  <a href="/" class="active">Tracker</a>
+  <a href="/categories-page">Categories</a>
+</nav>
 
-    <div class="form-card">
-      <h2>Add Expense</h2>
-      <div class="form-row">
-        <input type="text" id="name" placeholder="Description" maxlength="80" />
-        <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" />
-        <button class="add-btn" onclick="addExpense()">Add</button>
-      </div>
-      <div class="error-msg" id="error"></div>
-    </div>
+<div class="page">
 
-    <div class="list-card">
-      <div class="list-header">Expenses</div>
-      <ul class="expense-list" id="list"></ul>
-    </div>
+  <div class="total-card">
+    <div class="total-label">Total Spending</div>
+    <div class="total-amount" id="total">$0.00</div>
   </div>
 
-  <script>
-    const fmt = n => '$' + Number(n).toFixed(2);
+  <div class="card">
+    <h2>Add Expense</h2>
+    <div class="form-grid">
 
-    async function loadAll() {
-      const [expenses, totalRes] = await Promise.all([
-        fetch('/expenses').then(r => r.json()),
-        fetch('/expenses/total').then(r => r.json())
-      ]);
-      renderList(expenses);
-      document.getElementById('total').textContent = fmt(totalRes.total);
+      <div class="full">
+        <label class="field-label">Description</label>
+        <input type="text" id="name" placeholder="e.g. Lunch, Uber ride…" maxlength="100" />
+      </div>
+
+      <div>
+        <label class="field-label">Amount</label>
+        <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" />
+      </div>
+
+      <div>
+        <label class="field-label">Date</label>
+        <input type="date" id="date" />
+      </div>
+
+      <div class="full">
+        <label class="field-label">Category</label>
+        <div class="select-wrap" id="cat-wrap">
+          <input type="text" id="cat-input" placeholder="Search category…" autocomplete="off" />
+          <div class="dropdown" id="cat-dropdown"></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="error-msg" id="error"></div>
+    <button class="btn-primary" onclick="addExpense()">Add Expense</button>
+  </div>
+
+  <div class="list-card">
+    <div class="list-header">Expenses</div>
+    <ul class="expense-list" id="list"></ul>
+  </div>
+
+</div>
+
+<script>
+  const fmt = n => '$' + Number(n).toFixed(2);
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+  // Set default date to today
+  const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+  document.getElementById('date').value = todayStr;
+
+  // ── Searchable category dropdown ─────────────────────────────────────────
+  let allCategories = [];
+  let selectedCatId = null;
+
+  const catInput = document.getElementById('cat-input');
+  const catDropdown = document.getElementById('cat-dropdown');
+
+  async function loadCategories() {
+    allCategories = await fetch('/categories').then(r => r.json());
+    renderDropdown('');
+  }
+
+  function renderDropdown(query) {
+    const q = query.toLowerCase();
+    const filtered = q
+      ? allCategories.filter(c => c.name.toLowerCase().includes(q))
+      : allCategories;
+
+    if (!filtered.length) {
+      catDropdown.innerHTML = '<div class="dropdown-empty">No categories found</div>';
+    } else {
+      catDropdown.innerHTML = filtered.map(c =>
+        `<div class="dropdown-item" data-id="${c.id}" data-name="${esc(c.name)}">${esc(c.name)}</div>`
+      ).join('');
+      catDropdown.querySelectorAll('.dropdown-item').forEach(el => {
+        el.addEventListener('mousedown', e => {
+          e.preventDefault();
+          selectCategory(parseInt(el.dataset.id), el.dataset.name);
+        });
+      });
     }
+  }
 
-    function renderList(expenses) {
-      const list = document.getElementById('list');
-      if (!expenses.length) {
-        list.innerHTML = '<li class="empty-state">No expenses yet. Add one above.</li>';
-        return;
-      }
-      list.innerHTML = expenses.map(e => `
+  function selectCategory(id, name) {
+    selectedCatId = id;
+    catInput.value = name;
+    catDropdown.classList.remove('open');
+  }
+
+  catInput.addEventListener('focus', () => {
+    renderDropdown(catInput.value);
+    catDropdown.classList.add('open');
+  });
+  catInput.addEventListener('input', () => {
+    selectedCatId = null;
+    renderDropdown(catInput.value);
+    catDropdown.classList.add('open');
+  });
+  catInput.addEventListener('blur', () => {
+    setTimeout(() => catDropdown.classList.remove('open'), 150);
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', e => {
+    if (!document.getElementById('cat-wrap').contains(e.target)) {
+      catDropdown.classList.remove('open');
+    }
+  });
+
+  // ── Expenses ─────────────────────────────────────────────────────────────
+  async function loadAll() {
+    const [expenses, totalRes] = await Promise.all([
+      fetch('/expenses').then(r => r.json()),
+      fetch('/expenses/total').then(r => r.json())
+    ]);
+    renderList(expenses);
+    document.getElementById('total').textContent = fmt(totalRes.total);
+  }
+
+  function renderList(expenses) {
+    const list = document.getElementById('list');
+    if (!expenses.length) {
+      list.innerHTML = '<li class="empty-state">No expenses yet. Add one above.</li>';
+      return;
+    }
+    list.innerHTML = expenses.map(e => {
+      const datePart = e.date ? `<span>${formatDate(e.date)}</span>` : '';
+      const catPart  = e.category_name ? `<span class="expense-cat">${esc(e.category_name)}</span>` : '';
+      return `
         <li class="expense-item" id="item-${e.id}">
-          <span class="expense-name">${escHtml(e.name)}</span>
+          <div class="expense-info">
+            <div class="expense-name">${esc(e.name)}</div>
+            <div class="expense-meta">${datePart}${catPart}</div>
+          </div>
           <span class="expense-amount">${fmt(e.amount)}</span>
           <button class="del-btn" onclick="deleteExpense(${e.id})" title="Delete">&#x2715;</button>
-        </li>
-      `).join('');
-    }
+        </li>`;
+    }).join('');
+  }
 
-    function escHtml(str) {
-      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
+  function formatDate(str) {
+    if (!str) return '';
+    const [y, m, d] = str.split('-');
+    return `${d}/${m}/${y}`;
+  }
 
-    async function addExpense() {
-      const nameEl = document.getElementById('name');
-      const amountEl = document.getElementById('amount');
-      const errorEl = document.getElementById('error');
-      errorEl.textContent = '';
+  async function addExpense() {
+    const nameEl   = document.getElementById('name');
+    const amountEl = document.getElementById('amount');
+    const dateEl   = document.getElementById('date');
+    const errorEl  = document.getElementById('error');
+    errorEl.textContent = '';
 
-      const name = nameEl.value.trim();
-      const amount = parseFloat(amountEl.value);
+    const name   = nameEl.value.trim();
+    const amount = parseFloat(amountEl.value);
+    const date   = dateEl.value || null;
 
-      if (!name) { errorEl.textContent = 'Please enter a description.'; return; }
-      if (!amount || amount <= 0) { errorEl.textContent = 'Please enter a valid amount.'; return; }
+    if (!name)           { errorEl.textContent = 'Please enter a description.'; return; }
+    if (!amount || amount <= 0) { errorEl.textContent = 'Please enter a valid amount.'; return; }
 
-      const res = await fetch('/expenses', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, amount })
-      });
+    const body = { name, amount, date, category_id: selectedCatId };
 
-      if (res.ok) {
-        nameEl.value = '';
-        amountEl.value = '';
-        nameEl.focus();
-        await loadAll();
-      } else {
-        const data = await res.json();
-        errorEl.textContent = data.detail || 'Something went wrong.';
-      }
-    }
-
-    async function deleteExpense(id) {
-      const item = document.getElementById('item-' + id);
-      if (item) item.style.opacity = '0.4';
-      const res = await fetch('/expenses/' + id, { method: 'DELETE' });
-      if (res.ok || res.status === 204) {
-        await loadAll();
-      }
-    }
-
-    document.getElementById('name').addEventListener('keydown', e => {
-      if (e.key === 'Enter') document.getElementById('amount').focus();
-    });
-    document.getElementById('amount').addEventListener('keydown', e => {
-      if (e.key === 'Enter') addExpense();
+    const res = await fetch('/expenses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
     });
 
-    loadAll();
-  </script>
+    if (res.ok) {
+      nameEl.value   = '';
+      amountEl.value = '';
+      dateEl.value   = todayStr;
+      catInput.value = '';
+      selectedCatId  = null;
+      nameEl.focus();
+      await loadAll();
+    } else {
+      const data = await res.json();
+      errorEl.textContent = data.detail || 'Something went wrong.';
+    }
+  }
+
+  async function deleteExpense(id) {
+    const item = document.getElementById('item-' + id);
+    if (item) item.style.opacity = '0.4';
+    await fetch('/expenses/' + id, { method: 'DELETE' });
+    await loadAll();
+  }
+
+  // Enter key nav
+  document.getElementById('name').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('amount').focus();
+  });
+  document.getElementById('amount').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('date').focus();
+  });
+  document.getElementById('date').addEventListener('keydown', e => {
+    if (e.key === 'Enter') catInput.focus();
+  });
+
+  loadCategories();
+  loadAll();
+</script>
 </body>
 </html>

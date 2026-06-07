@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Categories — Expense Tracker</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    nav {
+      background: #1a1a2e;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      height: 52px;
+      gap: 4px;
+    }
+    .nav-brand {
+      font-weight: 700;
+      color: #fff;
+      font-size: 1rem;
+      margin-right: 24px;
+      letter-spacing: -0.3px;
+    }
+    nav a {
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+    nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    nav a.active { color: #fff; background: rgba(255,255,255,0.12); }
+
+    .page {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 32px 16px 0;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 22px;
+      letter-spacing: -0.4px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    .card h2 {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 14px;
+    }
+
+    .add-row {
+      display: flex;
+      gap: 10px;
+    }
+    input[type="text"] {
+      flex: 1;
+      border: 1.5px solid #e4e4e4;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 0.93rem;
+      outline: none;
+      background: #fafafa;
+      color: #1a1a2e;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    input[type="text"]:focus { border-color: #5b6af5; background: #fff; }
+
+    .btn-add {
+      background: #5b6af5;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 18px;
+      font-size: 0.93rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-add:hover { background: #4a57e0; }
+    .btn-add:active { transform: scale(0.97); }
+
+    .error-msg {
+      color: #e53935;
+      font-size: 0.81rem;
+      margin-top: 8px;
+      min-height: 16px;
+    }
+
+    /* Section headers */
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #bbb;
+      padding: 14px 20px 6px;
+    }
+
+    .cat-list { list-style: none; }
+    .cat-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 1px solid #f4f4f4;
+      gap: 10px;
+      transition: background 0.1s;
+      animation: fadeIn 0.18s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .cat-item:last-child { border-bottom: none; }
+    .cat-item:hover { background: #fafafa; }
+
+    .cat-name {
+      flex: 1;
+      font-size: 0.93rem;
+      color: #1a1a2e;
+      font-weight: 500;
+    }
+
+    .lock-icon {
+      font-size: 0.8rem;
+      color: #ccc;
+      user-select: none;
+    }
+
+    .system-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #aaa;
+      background: #f4f4f4;
+      border-radius: 4px;
+      padding: 2px 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .del-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #ccc;
+      font-size: 1rem;
+      padding: 4px 6px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .del-btn:hover { color: #e53935; background: #fdecea; }
+
+    .empty-state {
+      padding: 24px 20px;
+      text-align: center;
+      color: #bbb;
+      font-size: 0.88rem;
+    }
+
+    .list-card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">💰 Expenses</span>
+  <a href="/">Tracker</a>
+  <a href="/categories-page" class="active">Categories</a>
+</nav>
+
+<div class="page">
+  <h1>Categories</h1>
+
+  <div class="card">
+    <h2>Add Category</h2>
+    <div class="add-row">
+      <input type="text" id="new-cat" placeholder="Category name…" maxlength="60" />
+      <button class="btn-add" onclick="addCategory()">Add</button>
+    </div>
+    <div class="error-msg" id="error"></div>
+  </div>
+
+  <div class="list-card" id="list-card">
+    <ul class="cat-list" id="cat-list"></ul>
+  </div>
+</div>
+
+<script>
+  const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+  async function loadCategories() {
+    const cats = await fetch('/categories').then(r => r.json());
+    render(cats);
+  }
+
+  function render(cats) {
+    const list = document.getElementById('cat-list');
+    if (!cats.length) {
+      list.innerHTML = '<li class="empty-state">No categories found.</li>';
+      return;
+    }
+
+    const system = cats.filter(c => c.is_system);
+    const user   = cats.filter(c => !c.is_system);
+
+    let html = '';
+
+    if (system.length) {
+      html += `<li class="section-label">Built-in</li>`;
+      html += system.map(c => `
+        <li class="cat-item">
+          <span class="cat-name">${esc(c.name)}</span>
+          <span class="system-badge">Built-in</span>
+        </li>`).join('');
+    }
+
+    if (user.length) {
+      html += `<li class="section-label">Custom</li>`;
+      html += user.map(c => `
+        <li class="cat-item" id="cat-${c.id}">
+          <span class="cat-name">${esc(c.name)}</span>
+          <button class="del-btn" onclick="deleteCategory(${c.id})" title="Delete">&#x2715;</button>
+        </li>`).join('');
+    }
+
+    list.innerHTML = html;
+  }
+
+  async function addCategory() {
+    const input   = document.getElementById('new-cat');
+    const errorEl = document.getElementById('error');
+    errorEl.textContent = '';
+
+    const name = input.value.trim();
+    if (!name) { errorEl.textContent = 'Please enter a category name.'; return; }
+
+    const res = await fetch('/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    });
+
+    if (res.ok) {
+      input.value = '';
+      input.focus();
+      await loadCategories();
+    } else {
+      const data = await res.json();
+      errorEl.textContent = data.detail || 'Something went wrong.';
+    }
+  }
+
+  async function deleteCategory(id) {
+    const item = document.getElementById('cat-' + id);
+    if (item) item.style.opacity = '0.4';
+    const res = await fetch('/categories/' + id, { method: 'DELETE' });
+    if (res.ok || res.status === 204) {
+      await loadCategories();
+    } else {
+      const data = await res.json();
+      alert(data.detail || 'Could not delete category.');
+      await loadCategories();
+    }
+  }
+
+  document.getElementById('new-cat').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addCategory();
+  });
+
+  loadCategories();
+</script>
+</body>
+</html>
