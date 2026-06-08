@@ -423,6 +423,20 @@
     input.focus();
   }
 
+  // ── Inject user info into nav ────────────────────────────────────────────────
+  fetch('/me').then(r => r.json()).then(user => {
+    const nav = document.querySelector('nav');
+    if (!nav) return;
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0;';
+    wrap.innerHTML = `
+      ${user.is_admin ? `<a href="/admin" style="color:#f59e0b;font-size:0.72rem;font-weight:800;text-decoration:none;border:1px solid rgba(245,158,11,0.35);padding:3px 8px;border-radius:6px;letter-spacing:0.3px;">ADMIN</a>` : ''}
+      <span style="color:rgba(255,255,255,0.5);font-size:0.82rem;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${(user.name || user.email || '').replace(/</g,'&lt;')}</span>
+      <a href="/auth/logout" style="color:rgba(255,255,255,0.35);font-size:0.82rem;text-decoration:none;white-space:nowrap;border:1px solid rgba(255,255,255,0.1);padding:3px 10px;border-radius:6px;">Sign out</a>
+    `;
+    nav.appendChild(wrap);
+  }).catch(() => {});
+
   // ── Init ────────────────────────────────────────────────────────────────────
   // No auto-open; wait for user to click FAB
 })();

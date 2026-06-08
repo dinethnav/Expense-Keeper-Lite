@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Expense Tracker</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f0f2f5; min-height: 100vh; padding-bottom: 60px; }
+
+    nav { background: #1a1a2e; display: flex; align-items: center; padding: 0 24px; height: 52px; gap: 4px; }
+    .nav-brand { font-weight: 700; color: #fff; font-size: 1rem; margin-right: 24px; letter-spacing: -0.3px; }
+    nav a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.88rem; font-weight: 500; padding: 6px 12px; border-radius: 6px; transition: color 0.15s, background 0.15s; }
+    nav a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    nav a.active { color: #fff; background: rgba(255,255,255,0.12); }
+    .nav-spacer { flex: 1; }
+    .nav-badge { background: #f59e0b; color: #1a1a2e; font-size: 0.7rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; letter-spacing: 0.3px; }
+    .nav-logout { color: rgba(255,255,255,0.4) !important; font-size: 0.82rem !important; }
+
+    .page { max-width: 960px; margin: 0 auto; padding: 28px 16px 0; }
+
+    h2 { font-size: 1.2rem; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; letter-spacing: -0.3px; }
+
+    /* ── Stats grid ─────────────────────────────────────────────── */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    @media (max-width: 700px) { .stats-grid { grid-template-columns: 1fr 1fr; } }
+    .stat-card { background: #fff; border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+    .stat-val { font-size: 1.8rem; font-weight: 700; color: #1a1a2e; letter-spacing: -1px; margin-bottom: 3px; }
+    .stat-lbl { font-size: 0.75rem; color: #999; font-weight: 500; }
+    .stat-card.accent-blue  .stat-val { color: #5b6af5; }
+    .stat-card.accent-green .stat-val { color: #059669; }
+    .stat-card.accent-amber .stat-val { color: #d97706; }
+    .stat-card.accent-rose  .stat-val { color: #e11d48; }
+
+    /* ── User table ─────────────────────────────────────────────── */
+    .card { background: #fff; border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; }
+    .card-header { padding: 16px 20px; border-bottom: 1px solid #f2f2f2; display: flex; align-items: center; justify-content: space-between; }
+    .card-title { font-size: 0.9rem; font-weight: 700; color: #333; }
+    .user-count { font-size: 0.78rem; color: #bbb; font-weight: 500; }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th { padding: 10px 16px; text-align: left; font-size: 0.7rem; font-weight: 700; color: #bbb; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 1px solid #f2f2f2; }
+    tbody tr { border-bottom: 1px solid #f8f8f8; transition: background 0.1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #fafafa; }
+    td { padding: 12px 16px; font-size: 0.86rem; color: #333; vertical-align: middle; }
+
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%; background: #eef0ff;
+      color: #5b6af5; font-weight: 700; font-size: 0.82rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .user-cell { display: flex; align-items: center; gap: 10px; }
+    .user-name { font-weight: 600; color: #1a1a2e; }
+    .user-email { font-size: 0.78rem; color: #aaa; }
+
+    .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; }
+    .badge-admin { background: #fef3c7; color: #d97706; }
+    .badge-you   { background: #eef0ff; color: #5b6af5; }
+
+    /* Toggle switch */
+    .toggle { position: relative; display: inline-block; width: 36px; height: 20px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0; background: #e0e0e0; border-radius: 20px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .toggle-slider::before {
+      content: ''; position: absolute; width: 14px; height: 14px;
+      left: 3px; top: 3px; background: #fff; border-radius: 50%;
+      transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .toggle input:checked + .toggle-slider { background: #5b6af5; }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(16px); }
+    .toggle input:disabled + .toggle-slider { opacity: 0.4; cursor: not-allowed; }
+
+    .date-cell { font-size: 0.8rem; color: #aaa; white-space: nowrap; }
+    .count-cell { font-weight: 600; }
+
+    .empty-row td { text-align: center; color: #bbb; padding: 32px; font-size: 0.86rem; }
+
+    .search-bar { padding: 7px 13px; border: 1.5px solid #e4e4e4; border-radius: 8px; font-size: 0.86rem; outline: none; background: #fafafa; color: #1a1a2e; width: 200px; transition: border-color 0.15s; }
+    .search-bar:focus { border-color: #5b6af5; background: #fff; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-brand">💰 Expenses</span>
+  <a href="/">Tracker</a>
+  <a href="/budget-page">Budget</a>
+  <a href="/categories-page">Categories</a>
+  <a href="/admin" class="active">Admin</a>
+  <div class="nav-spacer"></div>
+  <span class="nav-badge">ADMIN</span>&nbsp;
+  <a href="/auth/logout" class="nav-logout">Sign out</a>
+</nav>
+
+<div class="page">
+  <h2>Admin Dashboard</h2>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card accent-blue">
+      <div class="stat-val" id="s-total">—</div>
+      <div class="stat-lbl">Total users</div>
+    </div>
+    <div class="stat-card accent-green">
+      <div class="stat-val" id="s-month">—</div>
+      <div class="stat-lbl">New this month</div>
+    </div>
+    <div class="stat-card accent-amber">
+      <div class="stat-val" id="s-active">—</div>
+      <div class="stat-lbl">Active users</div>
+    </div>
+    <div class="stat-card accent-rose">
+      <div class="stat-val" id="s-expenses">—</div>
+      <div class="stat-lbl">Expenses tracked</div>
+    </div>
+  </div>
+
+  <!-- User table -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Users <span class="user-count" id="user-count"></span></span>
+      <input class="search-bar" id="search" placeholder="Search users…" oninput="filterTable()" />
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Joined</th>
+          <th>Expenses</th>
+          <th>Budgets</th>
+          <th>Active</th>
+          <th>Admin</th>
+        </tr>
+      </thead>
+      <tbody id="user-tbody">
+        <tr class="empty-row"><td colspan="6">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  let allUsers = [];
+  let currentUserId = null;
+
+  async function load() {
+    const [stats, users, me] = await Promise.all([
+      fetch('/admin/stats').then(r => r.json()),
+      fetch('/admin/users').then(r => r.json()),
+      fetch('/me').then(r => r.json()),
+    ]);
+
+    currentUserId = me.id;
+
+    document.getElementById('s-total').textContent    = stats.total_users;
+    document.getElementById('s-month').textContent    = stats.new_this_month;
+    document.getElementById('s-active').textContent   = stats.active_users;
+    document.getElementById('s-expenses').textContent = stats.total_expenses;
+
+    allUsers = users;
+    renderTable(users);
+  }
+
+  function renderTable(users) {
+    document.getElementById('user-count').textContent = `(${users.length})`;
+    if (!users.length) {
+      document.getElementById('user-tbody').innerHTML = '<tr class="empty-row"><td colspan="6">No users found.</td></tr>';
+      return;
+    }
+    document.getElementById('user-tbody').innerHTML = users.map(u => {
+      const isMe = u.id === currentUserId;
+      const initials = (u.name || u.email).slice(0,2).toUpperCase();
+      const joined = u.created_at ? new Date(u.created_at).toLocaleDateString('default',{month:'short',day:'numeric',year:'numeric'}) : '—';
+      return `
+        <tr data-id="${u.id}" data-search="${(u.name||'').toLowerCase()} ${u.email.toLowerCase()}">
+          <td>
+            <div class="user-cell">
+              <div class="avatar">${initials}</div>
+              <div>
+                <div class="user-name">${esc(u.name || '—')} ${isMe ? '<span class="badge badge-you">You</span>' : ''} ${u.is_admin ? '<span class="badge badge-admin">Admin</span>' : ''}</div>
+                <div class="user-email">${esc(u.email)}</div>
+              </div>
+            </div>
+          </td>
+          <td class="date-cell">${joined}</td>
+          <td class="count-cell">${u.expense_count ?? 0}</td>
+          <td class="count-cell">${u.budget_count ?? 0}</td>
+          <td>
+            <label class="toggle">
+              <input type="checkbox" ${u.is_active ? 'checked' : ''} ${isMe ? 'disabled' : ''}
+                     onchange="toggleUser(${u.id}, 'is_active', this.checked)" />
+              <span class="toggle-slider"></span>
+            </label>
+          </td>
+          <td>
+            <label class="toggle">
+              <input type="checkbox" ${u.is_admin ? 'checked' : ''} ${isMe ? 'disabled' : ''}
+                     onchange="toggleUser(${u.id}, 'is_admin', this.checked)" />
+              <span class="toggle-slider"></span>
+            </label>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  function filterTable() {
+    const q = document.getElementById('search').value.toLowerCase();
+    const filtered = allUsers.filter(u =>
+      !q || (u.name||'').toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
+    );
+    renderTable(filtered);
+  }
+
+  async function toggleUser(id, field, value) {
+    await fetch(`/admin/users/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ [field]: value ? 1 : 0 }),
+    });
+    await load();
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  load();
+</script>
+</body>
+</html>

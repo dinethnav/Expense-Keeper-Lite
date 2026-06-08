@@ -1,7 +1,6 @@
 """
 AI chat handler with tool-calling for the expense tracker.
-Supports: add expenses (single or bulk), analyze spending, set/get budgets,
-          list categories, suggest budget allocations.
+All tool implementations filter by user_id for per-user data isolation.
 """
 import json
 import os
@@ -11,8 +10,7 @@ from contextlib import contextmanager
 from openai import OpenAI
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "expenses.db")
-
-client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+client  = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 
 @contextmanager
@@ -33,23 +31,21 @@ TOOLS = [
         "function": {
             "name": "add_expenses",
             "description": (
-                "Add one or more expenses to the tracker. "
-                "Use this whenever the user mentions spending money, buying something, "
-                "or lists multiple purchases at once."
+                "Add one or more expenses. Use this whenever the user mentions spending money, "
+                "buying something, or lists multiple purchases at once."
             ),
             "parameters": {
                 "type": "object",
                 "properties": {
                     "expenses": {
                         "type": "array",
-                        "description": "List of expenses to add.",
                         "items": {
                             "type": "object",
                             "properties": {
-                                "name": {"type": "string", "description": "Description of the expense"},
-                                "amount": {"type": "number", "description": "Amount in dollars"},
-                                "date": {"type": "string", "description": "Date as YYYY-MM-DD. Default to today if not specified."},
-                                "category": {"type": "string", "description": "Category name (must match an existing category)"},
+                                "name":     {"type": "string"},
+                                "amount":   {"type": "number"},
+                                "date":     {"type": "string", "description": "YYYY-MM-DD, default today"},
+                                "category": {"type": "string", "description": "Existing category name"},
                             },
                             "required": ["name", "amount"],
                         },
@@ -67,10 +63,7 @@ TOOLS = [
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "year_month": {
-                        "type": "string",
-                        "description": "Month in YYYY-MM format. Use current month if not specified.",
-                    }
+                    "year_month": {"type": "string", "description": "YYYY-MM. Current month if not specified."},
                 },
                 "required": ["year_month"],
             },
@@ -84,9 +77,9 @@ TOOLS = [
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "limit": {"type": "integer", "description": "Max number to return (default 10)"},
-                    "category": {"type": "string", "description": "Filter by category name"},
-                    "year_month": {"type": "string", "description": "Filter by month YYYY-MM"},
+                    "limit":      {"type": "integer", "description": "Max to return (default 10)"},
+                    "category":   {"type": "string"},
+                    "year_month": {"type": "string", "description": "Filter by YYYY-MM"},
                 },
             },
         },
@@ -95,7 +88,7 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "list_categories",
-            "description": "Get all available expense categories.",
+            "description": "Get all available expense categories for the current user.",
             "parameters": {"type": "object", "properties": {}},
         },
     },
@@ -107,8 +100,8 @@ TOOLS = [
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "year_month": {"type": "string", "description": "Month in YYYY-MM format"},
-                    "total_amount": {"type": "number", "description": "Total budget amount in dollars"},
+                    "year_month":    {"type": "string"},
+                    "total_amount":  {"type": "number"},
                 },
                 "required": ["year_month", "total_amount"],
             },
@@ -122,9 +115,9 @@ TOOLS = [
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "year_month": {"type": "string", "description": "Month in YYYY-MM format"},
-                    "category": {"type": "string", "description": "Category name"},
-                    "amount": {"type": "number", "description": "Budget amount for this category"},
+                    "year_month": {"type": "string"},
+                    "category":   {"type": "string"},
+                    "amount":     {"type": "number"},
                 },
                 "required": ["year_month", "category", "amount"],
             },
@@ -135,15 +128,14 @@ TOOLS = [
         "function": {
             "name": "get_budget",
             "description": (
-                "Get the planned budget for a given month, including total budget, "
-                "per-category allocations, and actual spending vs. plan for each category. "
-                "Use this whenever the user asks about their budget plan, what they planned to spend, "
-                "how their spending compares to the plan, or budget status for any month."
+                "Get the planned budget for a month, including total budget, per-category allocations, "
+                "and actual spending vs. plan for each category. Use this whenever the user asks about "
+                "their budget plan, what they planned to spend, or budget status for any month."
             ),
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "year_month": {"type": "string", "description": "Month in YYYY-MM format. Default to current month if not specified."},
+                    "year_month": {"type": "string", "description": "YYYY-MM. Current month if not specified."},
                 },
                 "required": ["year_month"],
             },
@@ -152,20 +144,21 @@ TOOLS = [
 ]
 
 
-# ── Tool implementations ───────────────────────────────────────────────────────
+# ── Tool implementations (all scoped to user_id) ──────────────────────────────
 
-def _run_add_expenses(args: dict) -> dict:
+def _run_add_expenses(args: dict, user_id: int) -> dict:
     today = date.today().isoformat()
-    added = []
-    errors = []
+    added, errors = [], []
     with get_db() as conn:
         categories = {
             r["name"].lower(): r["id"]
-            for r in conn.execute("SELECT id, name FROM categories").fetchall()
+            for r in conn.execute(
+                "SELECT id, name FROM categories WHERE is_system=1 OR user_id=?", (user_id,)
+            ).fetchall()
         }
         for exp in args.get("expenses", []):
-            name = exp.get("name", "").strip()
-            amount = exp.get("amount")
+            name     = exp.get("name", "").strip()
+            amount   = exp.get("amount")
             exp_date = exp.get("date") or today
             cat_name = (exp.get("category") or "").strip()
 
@@ -173,19 +166,18 @@ def _run_add_expenses(args: dict) -> dict:
             if cat_name:
                 category_id = categories.get(cat_name.lower())
                 if category_id is None:
-                    # Try partial match
                     for key, cid in categories.items():
                         if cat_name.lower() in key:
                             category_id = cid
                             break
 
             if not name or not amount or amount <= 0:
-                errors.append(f"Skipped invalid expense: {exp}")
+                errors.append(f"Skipped invalid: {exp}")
                 continue
 
             cur = conn.execute(
-                "INSERT INTO expenses (name, amount, date, category_id) VALUES (?,?,?,?)",
-                (name, amount, exp_date, category_id),
+                "INSERT INTO expenses (name, amount, date, category_id, user_id) VALUES (?,?,?,?,?)",
+                (name, amount, exp_date, category_id, user_id),
             )
             row = conn.execute("""
                 SELECT e.id, e.name, e.amount, e.date, c.name AS category_name
@@ -199,21 +191,22 @@ def _run_add_expenses(args: dict) -> dict:
     return result
 
 
-def _run_get_spending_summary(args: dict) -> dict:
+def _run_get_spending_summary(args: dict, user_id: int) -> dict:
     ym = args["year_month"]
     with get_db() as conn:
         total = conn.execute(
-            "SELECT COALESCE(SUM(amount),0) AS t FROM expenses WHERE date LIKE ?",
-            (f"{ym}%",)
+            "SELECT COALESCE(SUM(amount),0) AS t FROM expenses WHERE user_id=? AND date LIKE ?",
+            (user_id, f"{ym}%")
         ).fetchone()["t"]
         cats = conn.execute("""
             SELECT c.name AS category, COALESCE(SUM(e.amount),0) AS spent
             FROM expenses e JOIN categories c ON e.category_id=c.id
-            WHERE e.date LIKE ? GROUP BY c.id ORDER BY spent DESC
-        """, (f"{ym}%",)).fetchall()
+            WHERE e.user_id=? AND e.date LIKE ?
+            GROUP BY c.id ORDER BY spent DESC
+        """, (user_id, f"{ym}%")).fetchall()
         no_cat = conn.execute(
-            "SELECT COALESCE(SUM(amount),0) AS t FROM expenses WHERE date LIKE ? AND category_id IS NULL",
-            (f"{ym}%",)
+            "SELECT COALESCE(SUM(amount),0) AS t FROM expenses WHERE user_id=? AND date LIKE ? AND category_id IS NULL",
+            (user_id, f"{ym}%")
         ).fetchone()["t"]
     breakdown = [{"category": r["category"], "spent": r["spent"]} for r in cats]
     if no_cat > 0:
@@ -221,20 +214,19 @@ def _run_get_spending_summary(args: dict) -> dict:
     return {"year_month": ym, "total": total, "by_category": breakdown}
 
 
-def _run_get_recent_expenses(args: dict) -> dict:
-    limit = args.get("limit", 10)
+def _run_get_recent_expenses(args: dict, user_id: int) -> dict:
+    limit      = args.get("limit", 10)
     cat_filter = args.get("category", "")
-    ym = args.get("year_month", "")
+    ym         = args.get("year_month", "")
     with get_db() as conn:
-        conditions = []
-        params = []
+        conditions, params = ["e.user_id=?"], [user_id]
         if cat_filter:
             conditions.append("LOWER(c.name) LIKE ?")
             params.append(f"%{cat_filter.lower()}%")
         if ym:
             conditions.append("e.date LIKE ?")
             params.append(f"{ym}%")
-        where = ("WHERE " + " AND ".join(conditions)) if conditions else ""
+        where = "WHERE " + " AND ".join(conditions)
         rows = conn.execute(f"""
             SELECT e.id, e.name, e.amount, e.date, c.name AS category_name
             FROM expenses e LEFT JOIN categories c ON e.category_id=c.id
@@ -243,47 +235,51 @@ def _run_get_recent_expenses(args: dict) -> dict:
     return {"expenses": [dict(r) for r in rows], "count": len(rows)}
 
 
-def _run_list_categories(_: dict) -> dict:
+def _run_list_categories(args: dict, user_id: int) -> dict:
     with get_db() as conn:
         rows = conn.execute(
-            "SELECT id, name, is_system FROM categories ORDER BY is_system DESC, name"
+            "SELECT id, name, is_system FROM categories WHERE is_system=1 OR user_id=? ORDER BY is_system DESC, name",
+            (user_id,)
         ).fetchall()
     return {"categories": [dict(r) for r in rows]}
 
 
-def _run_set_budget(args: dict) -> dict:
-    ym = args["year_month"]
-    total = args["total_amount"]
+def _run_set_budget(args: dict, user_id: int) -> dict:
+    ym, total = args["year_month"], args["total_amount"]
     with get_db() as conn:
-        existing = conn.execute("SELECT id FROM budgets WHERE year_month=?", (ym,)).fetchone()
+        existing = conn.execute(
+            "SELECT id FROM budgets WHERE user_id=? AND year_month=?", (user_id, ym)
+        ).fetchone()
         if existing:
-            conn.execute("UPDATE budgets SET total_amount=? WHERE year_month=?", (total, ym))
+            conn.execute("UPDATE budgets SET total_amount=? WHERE user_id=? AND year_month=?",
+                         (total, user_id, ym))
         else:
-            conn.execute("INSERT INTO budgets (year_month, total_amount) VALUES (?,?)", (ym, total))
+            conn.execute("INSERT INTO budgets (user_id, year_month, total_amount) VALUES (?,?,?)",
+                         (user_id, ym, total))
         conn.commit()
     return {"ok": True, "year_month": ym, "total_amount": total}
 
 
-def _run_set_category_budget(args: dict) -> dict:
-    ym = args["year_month"]
-    cat_name = args["category"].strip()
-    amount = args["amount"]
+def _run_set_category_budget(args: dict, user_id: int) -> dict:
+    ym, cat_name, amount = args["year_month"], args["category"].strip(), args["amount"]
     with get_db() as conn:
-        # Find category
         row = conn.execute(
-            "SELECT id FROM categories WHERE LOWER(name)=LOWER(?)", (cat_name,)
+            "SELECT id FROM categories WHERE (is_system=1 OR user_id=?) AND LOWER(name)=LOWER(?)",
+            (user_id, cat_name)
         ).fetchone()
         if not row:
-            # partial match
             row = conn.execute(
-                "SELECT id, name FROM categories WHERE LOWER(name) LIKE ?", (f"%{cat_name.lower()}%",)
+                "SELECT id FROM categories WHERE (is_system=1 OR user_id=?) AND LOWER(name) LIKE ?",
+                (user_id, f"%{cat_name.lower()}%")
             ).fetchone()
         if not row:
             return {"error": f"Category '{cat_name}' not found"}
         category_id = row["id"]
-        budget = conn.execute("SELECT id FROM budgets WHERE year_month=?", (ym,)).fetchone()
+        budget = conn.execute(
+            "SELECT id FROM budgets WHERE user_id=? AND year_month=?", (user_id, ym)
+        ).fetchone()
         if not budget:
-            return {"error": f"No budget exists for {ym}. Create a total budget first."}
+            return {"error": f"No budget for {ym}. Create a total budget first."}
         conn.execute("""
             INSERT INTO budget_categories (budget_id, category_id, amount)
             VALUES (?,?,?)
@@ -293,121 +289,107 @@ def _run_set_category_budget(args: dict) -> dict:
     return {"ok": True, "year_month": ym, "category": cat_name, "amount": amount}
 
 
-def _run_get_budget(args: dict) -> dict:
+def _run_get_budget(args: dict, user_id: int) -> dict:
     ym = args["year_month"]
     with get_db() as conn:
-        budget = conn.execute("SELECT * FROM budgets WHERE year_month=?", (ym,)).fetchone()
+        budget = conn.execute(
+            "SELECT * FROM budgets WHERE user_id=? AND year_month=?", (user_id, ym)
+        ).fetchone()
         if not budget:
             return {"year_month": ym, "exists": False, "message": f"No budget set for {ym}."}
         budget = dict(budget)
 
-        # Category allocations
         cats = conn.execute("""
             SELECT c.name AS category, bc.amount AS planned
             FROM budget_categories bc JOIN categories c ON bc.category_id=c.id
             WHERE bc.budget_id=? ORDER BY bc.amount DESC
         """, (budget["id"],)).fetchall()
 
-        # Actual spending per category for this month
         spent_rows = conn.execute("""
             SELECT c.name AS category, COALESCE(SUM(e.amount),0) AS spent
             FROM expenses e JOIN categories c ON e.category_id=c.id
-            WHERE e.date LIKE ?
+            WHERE e.user_id=? AND e.date LIKE ?
             GROUP BY c.id
-        """, (f"{ym}%",)).fetchall()
+        """, (user_id, f"{ym}%")).fetchall()
         spent_map = {r["category"]: r["spent"] for r in spent_rows}
 
-        # Total actual spending for the month
         total_spent = conn.execute(
-            "SELECT COALESCE(SUM(amount),0) AS t FROM expenses WHERE date LIKE ?",
-            (f"{ym}%",)
+            "SELECT COALESCE(SUM(amount),0) AS t FROM expenses WHERE user_id=? AND date LIKE ?",
+            (user_id, f"{ym}%")
         ).fetchone()["t"]
 
         category_rows = []
         for c in cats:
-            planned = c["planned"]
-            spent = spent_map.get(c["category"], 0)
-            remaining = planned - spent
-            pct = round((spent / planned * 100), 1) if planned > 0 else None
+            planned  = c["planned"]
+            spent    = spent_map.get(c["category"], 0)
+            pct      = round(spent / planned * 100, 1) if planned > 0 else None
             category_rows.append({
-                "category": c["category"],
-                "planned": planned,
-                "spent": spent,
-                "remaining": remaining,
-                "percent_used": pct,
+                "category": c["category"], "planned": planned, "spent": spent,
+                "remaining": planned - spent, "percent_used": pct,
                 "status": "over" if spent > planned else ("warning" if pct and pct >= 80 else "ok"),
             })
 
-        total_planned = budget["total_amount"]
-        total_remaining = total_planned - total_spent
-        budget["exists"] = True
-        budget["total_spent"] = total_spent
-        budget["total_remaining"] = total_remaining
-        budget["percent_used"] = round((total_spent / total_planned * 100), 1) if total_planned > 0 else 0
-        budget["categories"] = category_rows
-
-        # Categories with spending but no budget allocation
+        total_planned   = budget["total_amount"]
         allocated_names = {c["category"] for c in cats}
         unplanned = [
             {"category": cat, "spent": amt}
             for cat, amt in spent_map.items()
             if cat not in allocated_names and amt > 0
         ]
+
+        budget.update({
+            "exists": True,
+            "total_spent": total_spent,
+            "total_remaining": total_planned - total_spent,
+            "percent_used": round(total_spent / total_planned * 100, 1) if total_planned > 0 else 0,
+            "categories": category_rows,
+        })
         if unplanned:
             budget["unplanned_spending"] = unplanned
-
     return budget
 
 
 TOOL_FNS = {
-    "add_expenses": _run_add_expenses,
-    "get_spending_summary": _run_get_spending_summary,
+    "add_expenses":        _run_add_expenses,
+    "get_spending_summary":_run_get_spending_summary,
     "get_recent_expenses": _run_get_recent_expenses,
-    "list_categories": _run_list_categories,
-    "set_budget": _run_set_budget,
+    "list_categories":     _run_list_categories,
+    "set_budget":          _run_set_budget,
     "set_category_budget": _run_set_category_budget,
-    "get_budget": _run_get_budget,
+    "get_budget":          _run_get_budget,
 }
 
 
-# ── Main streaming chat function ──────────────────────────────────────────────
+# ── System prompt ─────────────────────────────────────────────────────────────
 
 SYSTEM_PROMPT = f"""You are a smart, friendly personal finance assistant built into an expense tracker app.
 Today is {date.today().isoformat()}.
 
 You can:
-- Add one OR multiple expenses at once (always use add_expenses tool — never pretend to add without using it)
+- Add one OR multiple expenses at once (always use add_expenses — never pretend to add without using it)
 - Analyze spending patterns and give insights
 - Show the planned budget and compare it to actual spending
 - Help set up monthly budgets and category allocations
 - Answer questions about past expenses
 
 Guidelines:
-- Be concise and direct. Use bullet points or short lists when adding multiple items.
+- Be concise and direct. Use bullet points or short lists when listing multiple items.
 - When the user mentions buying things or spending money, immediately use add_expenses.
-- When adding expenses, infer the category from context if not stated.
-- When the user asks "how am I doing this month?", "what's my budget?", "show my budget plan",
-  "budget status", or anything about their planned budget, ALWAYS call get_budget first.
-  It returns both the plan AND actual spending — use it to give a clear comparison.
-- When presenting budget results: show total (spent vs planned), then list each category with
-  planned amount, spent amount, and whether they're on track, at risk (≥80%), or over budget.
-  Flag unplanned spending (spending in categories with no budget allocation) separately.
-- When the user asks "how am I doing this month?" or similar without mentioning budget,
-  call get_spending_summary for a raw spending breakdown.
+- Infer the category from context if not stated.
+- When asked about budget plan, budget status, or "what did I plan to spend", always call get_budget.
+  It returns both plan AND actual — use it to give a clear comparison.
+- When presenting budget: show total (spent vs planned), then list categories with status.
+  Flag unplanned spending separately.
 - Format dollar amounts as $X.XX.
-- If a tool call modifies data (adds expenses, sets budget), briefly confirm what was done.
-- Never make up expense data — always use tools to read/write real data.
-- If the user wants to set up a budget, ask for a total amount first, then offer to allocate by category.
+- After adding expenses or setting a budget, briefly confirm what was done.
+- Never make up data — always use tools.
 """
 
 
-def stream_chat(messages: list) -> "generator":
-    """
-    Yields SSE-formatted strings. Each is either:
-      data: {"type": "text", "content": "..."}
-      data: {"type": "tool_result", "name": "...", "result": {...}}
-      data: {"type": "done"}
-    """
+# ── Main streaming function ───────────────────────────────────────────────────
+
+def stream_chat(messages: list, user_id: int):
+    """Yields SSE lines. Streams text tokens, tool results, and done signal."""
     full_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + messages
 
     while True:
@@ -420,24 +402,21 @@ def stream_chat(messages: list) -> "generator":
             max_completion_tokens=1024,
         )
 
-        # Collect streamed response
-        tool_calls_raw = {}
+        tool_calls_raw: dict = {}
         text_buffer = ""
         finish_reason = None
-        assistant_msg = {"role": "assistant", "content": None, "tool_calls": []}
+        assistant_msg: dict = {"role": "assistant", "content": None}
 
         for chunk in response:
             delta = chunk.choices[0].delta if chunk.choices else None
-            if delta is None:
+            if not delta:
                 continue
             finish_reason = chunk.choices[0].finish_reason or finish_reason
 
-            # Text content
             if delta.content:
                 text_buffer += delta.content
                 yield f"data: {json.dumps({'type': 'text', 'content': delta.content})}\n\n"
 
-            # Tool calls
             if delta.tool_calls:
                 for tc in delta.tool_calls:
                     idx = tc.index
@@ -452,36 +431,28 @@ def stream_chat(messages: list) -> "generator":
 
         if text_buffer:
             assistant_msg["content"] = text_buffer
-        assistant_msg["tool_calls"] = [
-            {
-                "id": v["id"],
-                "type": "function",
-                "function": {"name": v["name"], "arguments": v["args"]},
-            }
-            for v in tool_calls_raw.values()
-        ] or None
-        if not assistant_msg["tool_calls"]:
-            del assistant_msg["tool_calls"]
+
+        if tool_calls_raw:
+            assistant_msg["tool_calls"] = [
+                {"id": v["id"], "type": "function",
+                 "function": {"name": v["name"], "arguments": v["args"]}}
+                for v in tool_calls_raw.values()
+            ]
 
         full_messages.append(assistant_msg)
 
         if not tool_calls_raw or finish_reason == "stop":
             break
 
-        # Execute tools and feed results back
+        # Execute tools
         for v in tool_calls_raw.values():
             fn = TOOL_FNS.get(v["name"])
-            if fn:
-                try:
-                    args = json.loads(v["args"])
-                    result = fn(args)
-                except Exception as e:
-                    result = {"error": str(e)}
-            else:
-                result = {"error": f"Unknown tool: {v['name']}"}
+            try:
+                result = fn(json.loads(v["args"]), user_id) if fn else {"error": f"Unknown: {v['name']}"}
+            except Exception as e:
+                result = {"error": str(e)}
 
             yield f"data: {json.dumps({'type': 'tool_result', 'name': v['name'], 'result': result})}\n\n"
-
             full_messages.append({
                 "role": "tool",
                 "tool_call_id": v["id"],
